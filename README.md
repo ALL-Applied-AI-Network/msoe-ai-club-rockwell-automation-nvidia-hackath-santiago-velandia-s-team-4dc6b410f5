@@ -4,7 +4,7 @@
 
 A camera-only add-on for older filling machines. After each pour, it checks whether the vial's color matches what the recipe should look like at that point, and alerts the operator when it doesn't. The main fault it targets is **carryover**: leftover liquid from the previous recipe in the shared mixing path that ends up in the next vial.
 
-> Status: work in progress (branch `ap`). Results below are on digital-twin test data only. Real-video testing is next.
+> Status: work in progress (branch `ap`). Trained and tested on digital-twin data; validated once on real video 5 (see [Validation on real video 5](#validation-on-real-video-5)).
 
 ---
 
@@ -13,7 +13,7 @@ A camera-only add-on for older filling machines. After each pour, it checks whet
 1. **Training data from the digital twin.** The organizers' Isaac Sim fill station is rendered from the same angle as the real fill camera, with **one picture after each pour**. Each vial gets a real or random valid recipe, and about half follow a different recipe (carryover). Lighting, camera look, dye shade and vial position vary per vial. Every picture is labeled for free.
 2. **An image network estimates the mix.** For each picture after a pour, the model looks at the vial and the recipe and estimates the orange and blue shares in the vial.
 3. **Compare with the recipe.** If the estimate is far from what a clean vial of that recipe should have at that pour, it **flags it**. For example: *"pour 1: about 66% orange, a clean vial would be 92%"*.
-4. **On the real line** (planned), a pour-stop detector takes the snapshot after each pour. A short calibration period with a few clean vials per recipe lines the model up with the real camera.
+4. **On the real video**, a motion detector finds each vial and takes a snapshot of the finished vial. No calibration is used: the model trained on the twin runs on the real camera as is.
 
 ## What it needs on a real line (assumptions)
 
@@ -24,7 +24,6 @@ The model reads the mix from the camera. To say whether that mix is *wrong*, the
 | **Vial camera** | 640×480 video of the fill position, the same view as CSI's `vial_fill` camera | A camera on the fill station | Once |
 | **Recipe queue:** which recipe each vial gets, in order | CSV rows of `vial, recipe_id, t100_ml, t200_ml, t400_ml, dispense_order`, the same columns as CSI's `video5_vial_recipes.csv` | The operator, the production schedule or an MES export | Per batch |
 | **Tank assignment:** which tank holds which color | `T100` = clear (diluent), `T200` = orange, `T400` = blue, `T300` = out of service; kept in `twin_tools/recipe_rules.json` | Set at install | Once |
-| **Calibration period** | A few clean vials per recipe at startup | Normal production | At startup |
 
 - **No connection to the machine's controls (PLC) is needed:** one camera, the recipe queue and the tank assignment.
 - **A tank camera is not needed.** It is an optional upgrade: it could warn about low or empty tanks, catch a tank refilled with the wrong dye, and recalibrate the expected colors automatically. The digital twin doesn't model the tanks, so this is future work.
@@ -101,12 +100,61 @@ recipe vector (10) ────────────────────�
 
 Full metrics and every test prediction: `model/results/model2/`. The model's weights (`model.pt`, 43 MB) are not in git.
 
+## Validation on real video 5
+
+The frozen model (trained only on twin data, threshold 8 points, **no calibration**) was run once on CSI's real video 5 with `real_check.py`. Video 5 was not used to train, tune or pick anything, apart from the early dye-color estimate noted under Disclosures.
+
+**Setup**
+- **Vials:** a motion detector finds each vial (carrier move, then pours) and takes a snapshot 1 s before the carrier moves the finished vial away. The check is on the **finished vial** (the last pour), since that is the picture the video gives reliably for every vial.
+- **Recipe queue:** CSI's `video5_vial_recipes.csv` (30 vials, 10 recipes, each recipe on 3 vials in a row).
+- **Matching:** each queue vial is matched to the detected vial whose time window overlaps its label window the most.
+- **Ground truth (assumption):** CSI's labels don't say which vials have carryover. The first vial after a recipe change is counted as carryover and the others as clean. The very first vial has no previous recipe and is not scored, so **29 vials are scored: 9 carryover, 20 clean.**
+
+**Results**
+
+| Measure | Result |
+|---|---|
+| Vials found and matched | 30 of 30 (plus 1 false detection, dropped by matching) |
+| Carryover vials caught | **8 of 9** |
+| Clean vials falsely flagged | **9 of 20** |
+| AUC (gap separating carryover from clean) | **0.82** |
+| Precision / recall / F1 | 0.47 / 0.89 / 0.62 |
+| Median gap: carryover vs clean | **28 vs 7 points** |
+
+**By recipe** (each recipe: vial 1 after the change, then 2 clean vials)
+
+| Recipe (mL orange / blue / clear) | Carryover vial | Clean vials flagged |
+|---|---|---|
+| 5 (10 / 10 / 10) | first vial, not scored | 0 of 2 |
+| 6 (10 / 0 / 30) | caught | 2 of 2 |
+| 7 (0 / 50 / 20) | caught | 2 of 2 |
+| 8 (20 / 20 / 20) | caught | 0 of 2 |
+| 9 (35 / 35 / 10) | **missed** (gap 7.3, just under 8) | 0 of 2 |
+| 10 (15 / 15 / 45) | caught | 2 of 2 |
+| 11 (10 / 50 / 10) | caught | 0 of 2 |
+| 12 (50 / 10 / 10) | caught | 0 of 2 |
+| 13 (50 / 20 / 0) | caught | 1 of 2 |
+| 14 (0 / 10 / 60) | caught | 2 of 2 |
+
+- **The model separates carryover from clean on real video** without seeing any real data in training (AUC 0.82; the twin test gave 0.90).
+- **False alarms are a per-recipe color bias, not random noise.** 8 of the 9 come from recipes 6, 10 and 14 (mostly clear water) and recipe 7 (blue only): the model reads more dye than these vials hold, on every vial of the recipe. The mixed recipes 5, 8, 11 and 12 have no false alarms.
+- **The missed vial** is recipe 9 right after recipe 8. Both have equal orange and blue, so the leftover barely changes the color.
+- A per-recipe calibration with a few clean vials could reduce these false alarms; it was not used here.
+
+Every vial's estimate, gap and flag: `model/results/real_vial_fill_video_5/vials.csv`; snapshots of all 30 vials: `contact_sheet.jpg` in the same folder.
+
+**Disclosures**
+- The carryover labels above are an assumption (first vial after a recipe change), not CSI ground truth.
+- Matching uses the start and end times in CSI's label file. On a real line the queue would give the order only; the script falls back to order matching when the times are missing.
+- During development of the matching step, the results for 6 vials were seen once before the matching rule was fixed (the first rule matched too few vials). The model, threshold and flag rule were not changed.
+- The twin's dye colors were first estimated from video-5 vials, before video 5 was reserved for validation (see Known limits).
+
 ## Known limits
 
-- **Twin colors aren't calibrated to the real camera** (orange renders too red). Random dye shades in training make the model hold up under color shifts, and a short calibration period on the real line is planned to line the colors up. The robustness test shifts colors the same way the training does, so real video is the true test.
+- **Twin colors aren't calibrated to the real camera** (orange renders too red). Random dye shades in training make the model hold up under color shifts, but no calibration to the real camera is used. On video 5 this shows up as a per-recipe color bias (see Validation on real video 5); a calibration step with a few clean vials per recipe is possible future work.
 - The twin's dye colors were first estimated from video-5 vials, before video 5 was reserved for validation. Random dye shades dilute this, and it will be reported with the final results.
 - In the twin, liquid is always fully mixed and settled; carryover is the only fault simulated.
-- Not yet tested on real video.
+- Real-video validation covers one video (30 vials, 10 recipes) and checks only the finished vial.
 
 ## How to run
 
@@ -125,12 +173,17 @@ python model/build_table.py twin_runs/<run>/out [more runs...] --out model/table
 
 # 4. Train and test the model (GPU) -> model/results/model2/
 python model/train_cnn.py --table model/tables/train_all.csv --pretrained
+
+# 5. Check a real video with the trained model -> model/results/real_<video name>/
+python model/real_check.py --video <video.mp4> --recipes <recipe queue CSV>
 ```
+
+`real_check.py` works on any video from the fill camera: only `--video` and `--recipes` change. If the recipe queue has `start_s`/`end_s` columns (as CSI's labels do), vials are matched by time and the run is scored; otherwise vials are matched in order and it only reports estimates and flags.
 
 | Folder | Contents |
 |---|---|
 | `twin_tools/` | `render_dataset.py` (twin picture generator), `recipe_rules.json` (recipe rules, tank assignment, the 10 real recipes) |
-| `model/` | `build_table.py` (pictures → table), `train_cnn.py` (the model); `tables/` and `results/` |
+| `model/` | `build_table.py` (pictures → table), `train_cnn.py` (the model), `real_check.py` (runs the model on a real video); `tables/` and `results/` |
 | `samples/` | 24 example twin pictures; `samples.csv` lists recipe, pour and carryover for each |
 | `docs/DATASET_GENERATION.md` | How the twin data is made, every label column, and which columns may be model inputs |
 | `PROCESS.md` | Plan and status |
@@ -139,7 +192,7 @@ python model/train_cnn.py --table model/tables/train_all.csv --pretrained
 
 - **The organizers' data and digital twin** (`csi-vial-fill-dataset`, `csi_digital_twin_v1`): the Innovation Lab data folder. Real videos are used for testing only, never for training.
 - **Generated twin pictures** (8,904 pictures from 4 runs of 1,000 vials, plus masks and labels): on the YAAD workspace, not in git because of their size. Access on request.
-- **Data plan:** train/test on twin pictures (80/20, split by vial); extra test on real videos 1–4; final validation once on real video 5.
+- **Data plan:** train/test on twin pictures (80/20, split by vial); final validation once on real video 5. Real videos 1–4 have no recipe queue, so they are not scored.
 
 ## Credits
 

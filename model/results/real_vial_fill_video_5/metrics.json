@@ -1,0 +1,39 @@
+{
+  "info": {
+    "video": "/Users/adalimepowell/Desktop/Hackathon/csi-vial-fill-dataset/vial_fill/videos/vial_fill_video_5.mp4",
+    "recipes": "/Users/adalimepowell/Desktop/Hackathon/csi-vial-fill-dataset/vial_fill/labels/video5_vial_recipes.csv",
+    "model": "model/results/model2/out/model.pt",
+    "threshold": 0.08,
+    "check": "final vial (last pour)",
+    "calibration": "none",
+    "vials_in_queue": 30,
+    "vials_detected": 31,
+    "vials_matched": 30,
+    "false_detections_s": [
+      [
+        247.9,
+        264.5
+      ]
+    ],
+    "missed_vials": [],
+    "ground_truth": "first vial after a recipe change = carryover (assumption); first vial in the queue not scored",
+    "matching": "detected vial window with the largest overlap with the label's dispense window"
+  },
+  "vials_flagged": "18 of 30",
+  "carryover_vials_caught": "8 of 9",
+  "clean_vials_falsely_flagged": "9 of 20",
+  "scores": {
+    "n": 29,
+    "positives": 9,
+    "accuracy": 0.6552,
+    "precision": 0.4706,
+    "recall": 0.8889,
+    "f1": 0.6154,
+    "false_alarm_rate": 0.45,
+    "roc_auc": 0.8167
+  },
+  "mix_gap_median": {
+    "carryover": 0.284,
+    "clean": 0.071
+  }
+}
