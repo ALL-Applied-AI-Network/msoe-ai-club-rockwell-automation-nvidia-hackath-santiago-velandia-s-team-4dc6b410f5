@@ -8,7 +8,8 @@ shares, then the same flag rule as model 1's mix_rule (estimate vs expected_clea
     python model/train_cnn.py --table model/tables/train_camera_s1001.csv --limit-vials 40 --epochs 1
     # -> model/results/model2/metrics.json, test_predictions.csv, model.pt
 
-Needs only torch, torchvision, numpy, pandas, Pillow (all in the NVIDIA PyTorch container).
+Needs torch, torchvision, numpy, Pillow (in the NVIDIA PyTorch container) and pandas (not included in
+nvcr.io/nvidia/pytorch:25.10-py3: run `pip install pandas` first in the job command).
 Uses the same table (build_table.py) for the split, recipe inputs and labels; images are read from each run
 folder (--run NAME=DIR; default DIR = twin_runs/NAME/out). Inputs follow the leakage rule: the picture, the
 recipe columns and expected_* only. Split: the table's train/test (by vial); 15% of the train vials are held out

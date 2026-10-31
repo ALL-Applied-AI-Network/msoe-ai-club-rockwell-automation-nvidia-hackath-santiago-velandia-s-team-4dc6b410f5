@@ -1,0 +1,551 @@
+{
+  "info": {
+    "table": "model/tables/train_all.csv",
+    "train_rows": 7090,
+    "test_rows": 1814,
+    "train_vials": 3200,
+    "test_vials": 800,
+    "note": "scored on TWIN test vials only; twin colors are uncalibrated (approx_v1)"
+  },
+  "mix_rule": {
+    "inputs": [
+      "liq_r",
+      "liq_g",
+      "liq_b",
+      "panel_r",
+      "panel_g",
+      "panel_b",
+      "liqn_r",
+      "liqn_g",
+      "liqn_b",
+      "liq_h",
+      "liq_s",
+      "liq_v",
+      "band0_r",
+      "band0_g",
+      "band0_b",
+      "band1_r",
+      "band1_g",
+      "band1_b",
+      "band2_r",
+      "band2_g",
+      "band2_b",
+      "band3_r",
+      "band3_g",
+      "band3_b",
+      "band4_r",
+      "band4_g",
+      "band4_b",
+      "band5_r",
+      "band5_g",
+      "band5_b",
+      "band6_r",
+      "band6_g",
+      "band6_b",
+      "band7_r",
+      "band7_g",
+      "band7_b",
+      "expected_clean_orange",
+      "expected_clean_blue (compared, not learned)"
+    ],
+    "threshold_points": 0.1,
+    "mix_error_mae": {
+      "orange": 0.0428,
+      "blue": 0.0354
+    },
+    "test": {
+      "n": 1814,
+      "positives": 718,
+      "accuracy": 0.79,
+      "precision": 0.7109,
+      "recall": 0.7911,
+      "f1": 0.7488,
+      "false_alarm_rate": 0.2108,
+      "roc_auc": 0.8645
+    },
+    "test_by_stage": {
+      "1": {
+        "n": 800,
+        "positives": 349,
+        "accuracy": 0.7375,
+        "precision": 0.6527,
+        "recall": 0.851,
+        "f1": 0.7388,
+        "false_alarm_rate": 0.3503,
+        "roc_auc": 0.8512
+      },
+      "2": {
+        "n": 709,
+        "positives": 272,
+        "accuracy": 0.8293,
+        "precision": 0.7871,
+        "recall": 0.761,
+        "f1": 0.7738,
+        "false_alarm_rate": 0.1281,
+        "roc_auc": 0.8909
+      },
+      "3": {
+        "n": 305,
+        "positives": 97,
+        "accuracy": 0.8361,
+        "precision": 0.7901,
+        "recall": 0.6598,
+        "f1": 0.7191,
+        "false_alarm_rate": 0.0817,
+        "roc_auc": 0.8801
+      }
+    },
+    "test_vials": {
+      "vials": 800,
+      "off_spec_vials_caught": "310 of 349",
+      "carryover_vials_caught": "329 of 377",
+      "clean_vials_falsely_flagged": "165 of 423"
+    }
+  },
+  "direct_gb": {
+    "inputs": [
+      "liq_r",
+      "liq_g",
+      "liq_b",
+      "panel_r",
+      "panel_g",
+      "panel_b",
+      "liqn_r",
+      "liqn_g",
+      "liqn_b",
+      "liq_h",
+      "liq_s",
+      "liq_v",
+      "band0_r",
+      "band0_g",
+      "band0_b",
+      "band1_r",
+      "band1_g",
+      "band1_b",
+      "band2_r",
+      "band2_g",
+      "band2_b",
+      "band3_r",
+      "band3_g",
+      "band3_b",
+      "band4_r",
+      "band4_g",
+      "band4_b",
+      "band5_r",
+      "band5_g",
+      "band5_b",
+      "band6_r",
+      "band6_g",
+      "band6_b",
+      "band7_r",
+      "band7_g",
+      "band7_b",
+      "t200_ml",
+      "t400_ml",
+      "t100_ml",
+      "total_ml",
+      "stage",
+      "stages_total",
+      "expected_orange",
+      "expected_blue",
+      "expected_clean_orange",
+      "expected_clean_blue"
+    ],
+    "threshold": 0.35,
+    "test": {
+      "n": 1814,
+      "positives": 718,
+      "accuracy": 0.7789,
+      "precision": 0.6926,
+      "recall": 0.7939,
+      "f1": 0.7398,
+      "false_alarm_rate": 0.2308,
+      "roc_auc": 0.8695
+    },
+    "test_by_stage": {
+      "1": {
+        "n": 800,
+        "positives": 349,
+        "accuracy": 0.8013,
+        "precision": 0.7487,
+        "recall": 0.8195,
+        "f1": 0.7825,
+        "false_alarm_rate": 0.2129,
+        "roc_auc": 0.8898
+      },
+      "2": {
+        "n": 709,
+        "positives": 272,
+        "accuracy": 0.7616,
+        "precision": 0.6614,
+        "recall": 0.7757,
+        "f1": 0.714,
+        "false_alarm_rate": 0.2471,
+        "roc_auc": 0.8557
+      },
+      "3": {
+        "n": 305,
+        "positives": 97,
+        "accuracy": 0.7607,
+        "precision": 0.5984,
+        "recall": 0.7526,
+        "f1": 0.6667,
+        "false_alarm_rate": 0.2356,
+        "roc_auc": 0.837
+      }
+    },
+    "test_vials": {
+      "vials": 800,
+      "off_spec_vials_caught": "304 of 349",
+      "carryover_vials_caught": "317 of 377",
+      "clean_vials_falsely_flagged": "145 of 423"
+    }
+  },
+  "direct_lr": {
+    "inputs": [
+      "liq_r",
+      "liq_g",
+      "liq_b",
+      "panel_r",
+      "panel_g",
+      "panel_b",
+      "liqn_r",
+      "liqn_g",
+      "liqn_b",
+      "liq_h",
+      "liq_s",
+      "liq_v",
+      "band0_r",
+      "band0_g",
+      "band0_b",
+      "band1_r",
+      "band1_g",
+      "band1_b",
+      "band2_r",
+      "band2_g",
+      "band2_b",
+      "band3_r",
+      "band3_g",
+      "band3_b",
+      "band4_r",
+      "band4_g",
+      "band4_b",
+      "band5_r",
+      "band5_g",
+      "band5_b",
+      "band6_r",
+      "band6_g",
+      "band6_b",
+      "band7_r",
+      "band7_g",
+      "band7_b",
+      "t200_ml",
+      "t400_ml",
+      "t100_ml",
+      "total_ml",
+      "stage",
+      "stages_total",
+      "expected_orange",
+      "expected_blue",
+      "expected_clean_orange",
+      "expected_clean_blue"
+    ],
+    "threshold": 0.15,
+    "test": {
+      "n": 1814,
+      "positives": 718,
+      "accuracy": 0.4223,
+      "precision": 0.4047,
+      "recall": 0.9763,
+      "f1": 0.5722,
+      "false_alarm_rate": 0.9407,
+      "roc_auc": 0.6623
+    },
+    "test_by_stage": {
+      "1": {
+        "n": 800,
+        "positives": 349,
+        "accuracy": 0.4562,
+        "precision": 0.4442,
+        "recall": 0.9799,
+        "f1": 0.6113,
+        "false_alarm_rate": 0.949,
+        "roc_auc": 0.6964
+      },
+      "2": {
+        "n": 709,
+        "positives": 272,
+        "accuracy": 0.4161,
+        "precision": 0.3947,
+        "recall": 0.9779,
+        "f1": 0.5624,
+        "false_alarm_rate": 0.9336,
+        "roc_auc": 0.6616
+      },
+      "3": {
+        "n": 305,
+        "positives": 97,
+        "accuracy": 0.3475,
+        "precision": 0.3229,
+        "recall": 0.9588,
+        "f1": 0.4831,
+        "false_alarm_rate": 0.9375,
+        "roc_auc": 0.5131
+      }
+    },
+    "test_vials": {
+      "vials": 800,
+      "off_spec_vials_caught": "346 of 349",
+      "carryover_vials_caught": "374 of 377",
+      "clean_vials_falsely_flagged": "406 of 423"
+    }
+  },
+  "recipe_only": {
+    "inputs": [
+      "t200_ml",
+      "t400_ml",
+      "t100_ml",
+      "total_ml",
+      "stage",
+      "stages_total",
+      "expected_orange",
+      "expected_blue",
+      "expected_clean_orange",
+      "expected_clean_blue"
+    ],
+    "threshold": 0.1,
+    "test": {
+      "n": 1814,
+      "positives": 718,
+      "accuracy": 0.4013,
+      "precision": 0.3971,
+      "recall": 0.9889,
+      "f1": 0.5666,
+      "false_alarm_rate": 0.9836,
+      "roc_auc": 0.5421
+    }
+  },
+  "end_only": {
+    "inputs": [
+      "liq_r",
+      "liq_g",
+      "liq_b",
+      "panel_r",
+      "panel_g",
+      "panel_b",
+      "liqn_r",
+      "liqn_g",
+      "liqn_b",
+      "liq_h",
+      "liq_s",
+      "liq_v",
+      "band0_r",
+      "band0_g",
+      "band0_b",
+      "band1_r",
+      "band1_g",
+      "band1_b",
+      "band2_r",
+      "band2_g",
+      "band2_b",
+      "band3_r",
+      "band3_g",
+      "band3_b",
+      "band4_r",
+      "band4_g",
+      "band4_b",
+      "band5_r",
+      "band5_g",
+      "band5_b",
+      "band6_r",
+      "band6_g",
+      "band6_b",
+      "band7_r",
+      "band7_g",
+      "band7_b",
+      "t200_ml",
+      "t400_ml",
+      "t100_ml",
+      "total_ml",
+      "stage",
+      "stages_total",
+      "expected_orange",
+      "expected_blue",
+      "expected_clean_orange",
+      "expected_clean_blue"
+    ],
+    "threshold": 0.5,
+    "test": {
+      "n": 800,
+      "positives": 310,
+      "accuracy": 0.8225,
+      "precision": 0.8281,
+      "recall": 0.6839,
+      "f1": 0.7491,
+      "false_alarm_rate": 0.0898,
+      "roc_auc": 0.8655
+    },
+    "test_vials": {
+      "vials": 800,
+      "off_spec_vials_caught": "212 of 310",
+      "carryover_vials_caught": "222 of 377",
+      "clean_vials_falsely_flagged": "34 of 423"
+    }
+  },
+  "robustness": {
+    "none": {
+      "mix_rule": {
+        "roc_auc": 0.8644,
+        "f1": 0.7484,
+        "recall": 0.7911,
+        "false_alarm_rate": 0.2117
+      },
+      "direct_gb": {
+        "roc_auc": 0.8693,
+        "f1": 0.7393,
+        "recall": 0.7939,
+        "false_alarm_rate": 0.2318
+      }
+    },
+    "liquid green x0.9": {
+      "mix_rule": {
+        "roc_auc": 0.7574,
+        "f1": 0.6476,
+        "recall": 0.7549,
+        "false_alarm_rate": 0.3777
+      },
+      "direct_gb": {
+        "roc_auc": 0.843,
+        "f1": 0.7136,
+        "recall": 0.7841,
+        "false_alarm_rate": 0.271
+      }
+    },
+    "liquid green x1.1": {
+      "mix_rule": {
+        "roc_auc": 0.869,
+        "f1": 0.7422,
+        "recall": 0.7939,
+        "false_alarm_rate": 0.2263
+      },
+      "direct_gb": {
+        "roc_auc": 0.8699,
+        "f1": 0.7329,
+        "recall": 0.8273,
+        "false_alarm_rate": 0.2819
+      }
+    },
+    "liquid red x0.9": {
+      "mix_rule": {
+        "roc_auc": 0.8572,
+        "f1": 0.7368,
+        "recall": 0.7855,
+        "false_alarm_rate": 0.2272
+      },
+      "direct_gb": {
+        "roc_auc": 0.8538,
+        "f1": 0.709,
+        "recall": 0.8092,
+        "false_alarm_rate": 0.3102
+      }
+    },
+    "liquid red x1.1": {
+      "mix_rule": {
+        "roc_auc": 0.8447,
+        "f1": 0.7144,
+        "recall": 0.7646,
+        "false_alarm_rate": 0.2464
+      },
+      "direct_gb": {
+        "roc_auc": 0.8456,
+        "f1": 0.717,
+        "recall": 0.7744,
+        "false_alarm_rate": 0.2527
+      }
+    },
+    "liquid blue x0.9": {
+      "mix_rule": {
+        "roc_auc": 0.8703,
+        "f1": 0.7554,
+        "recall": 0.8106,
+        "false_alarm_rate": 0.2199
+      },
+      "direct_gb": {
+        "roc_auc": 0.8595,
+        "f1": 0.7215,
+        "recall": 0.8189,
+        "false_alarm_rate": 0.2956
+      }
+    },
+    "liquid blue x1.1": {
+      "mix_rule": {
+        "roc_auc": 0.8156,
+        "f1": 0.6904,
+        "recall": 0.7577,
+        "false_alarm_rate": 0.2865
+      },
+      "direct_gb": {
+        "roc_auc": 0.8514,
+        "f1": 0.7034,
+        "recall": 0.7563,
+        "false_alarm_rate": 0.2582
+      }
+    },
+    "liquid darker x0.85": {
+      "mix_rule": {
+        "roc_auc": 0.8549,
+        "f1": 0.7319,
+        "recall": 0.7813,
+        "false_alarm_rate": 0.2318
+      },
+      "direct_gb": {
+        "roc_auc": 0.8432,
+        "f1": 0.7112,
+        "recall": 0.8078,
+        "false_alarm_rate": 0.3038
+      }
+    },
+    "liquid lighter x1.15": {
+      "mix_rule": {
+        "roc_auc": 0.8322,
+        "f1": 0.7087,
+        "recall": 0.7744,
+        "false_alarm_rate": 0.2692
+      },
+      "direct_gb": {
+        "roc_auc": 0.8422,
+        "f1": 0.7135,
+        "recall": 0.7646,
+        "false_alarm_rate": 0.2482
+      }
+    },
+    "camera darker x0.85": {
+      "mix_rule": {
+        "roc_auc": 0.8567,
+        "f1": 0.7243,
+        "recall": 0.7646,
+        "false_alarm_rate": 0.2272
+      },
+      "direct_gb": {
+        "roc_auc": 0.8354,
+        "f1": 0.706,
+        "recall": 0.6755,
+        "false_alarm_rate": 0.156
+      }
+    },
+    "camera warmer r1.1 b0.9": {
+      "mix_rule": {
+        "roc_auc": 0.8724,
+        "f1": 0.7453,
+        "recall": 0.7925,
+        "false_alarm_rate": 0.219
+      },
+      "direct_gb": {
+        "roc_auc": 0.8557,
+        "f1": 0.7232,
+        "recall": 0.7786,
+        "false_alarm_rate": 0.2454
+      }
+    }
+  }
+}
