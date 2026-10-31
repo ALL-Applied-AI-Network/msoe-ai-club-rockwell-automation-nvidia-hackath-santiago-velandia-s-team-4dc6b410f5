@@ -1,0 +1,167 @@
+{
+  "info": {
+    "table": "model/tables/train_all.csv",
+    "runs": {
+      "train_camera_s1001": "/job/in/twin_runs/train_camera_s1001/out",
+      "train_jitter_s2001": "/job/in/twin_runs/train_jitter_s2001/out",
+      "train_jitter_s2002": "/job/in/twin_runs/train_jitter_s2002/out",
+      "train_jitter_s2003": "/job/in/twin_runs/train_jitter_s2003/out"
+    },
+    "device": "cuda",
+    "pretrained": true,
+    "epochs": 25,
+    "best_epoch": 25,
+    "shade_aug": 0.15,
+    "fit_pictures": 6055,
+    "val_pictures": 1035,
+    "test_pictures": 1814,
+    "test_vials": 800,
+    "minutes": 6.9,
+    "note": "scored on TWIN test vials only; twin colors are uncalibrated (approx_v1)"
+  },
+  "mix_rule_cnn": {
+    "threshold_points": 0.08,
+    "mix_error_mae": {
+      "orange": 0.0254,
+      "blue": 0.0205
+    },
+    "test": {
+      "n": 1814,
+      "positives": 718,
+      "accuracy": 0.8098,
+      "precision": 0.7305,
+      "recall": 0.8231,
+      "f1": 0.7741,
+      "false_alarm_rate": 0.1989,
+      "roc_auc": 0.8981
+    },
+    "test_by_stage": {
+      "1": {
+        "n": 800,
+        "positives": 349,
+        "accuracy": 0.7238,
+        "precision": 0.6317,
+        "recall": 0.8797,
+        "f1": 0.7353,
+        "false_alarm_rate": 0.3969,
+        "roc_auc": 0.8728
+      },
+      "2": {
+        "n": 709,
+        "positives": 272,
+        "accuracy": 0.8731,
+        "precision": 0.8611,
+        "recall": 0.7978,
+        "f1": 0.8282,
+        "false_alarm_rate": 0.0801,
+        "roc_auc": 0.9445
+      },
+      "3": {
+        "n": 305,
+        "positives": 97,
+        "accuracy": 0.8885,
+        "precision": 0.9437,
+        "recall": 0.6907,
+        "f1": 0.7976,
+        "false_alarm_rate": 0.0192,
+        "roc_auc": 0.939
+      }
+    },
+    "test_vials": {
+      "vials": 800,
+      "off_spec_vials_caught": "319 of 349",
+      "carryover_vials_caught": "336 of 377",
+      "clean_vials_falsely_flagged": "175 of 423"
+    }
+  },
+  "robustness": {
+    "none": {
+      "mix_rule_cnn": {
+        "roc_auc": 0.8981,
+        "f1": 0.7741,
+        "recall": 0.8231,
+        "false_alarm_rate": 0.1989
+      }
+    },
+    "liquid green x0.9": {
+      "mix_rule_cnn": {
+        "roc_auc": 0.8967,
+        "f1": 0.7756,
+        "recall": 0.8231,
+        "false_alarm_rate": 0.1962
+      }
+    },
+    "liquid green x1.1": {
+      "mix_rule_cnn": {
+        "roc_auc": 0.8958,
+        "f1": 0.774,
+        "recall": 0.8203,
+        "false_alarm_rate": 0.1962
+      }
+    },
+    "liquid red x0.9": {
+      "mix_rule_cnn": {
+        "roc_auc": 0.8985,
+        "f1": 0.7752,
+        "recall": 0.8259,
+        "false_alarm_rate": 0.1998
+      }
+    },
+    "liquid red x1.1": {
+      "mix_rule_cnn": {
+        "roc_auc": 0.8983,
+        "f1": 0.7783,
+        "recall": 0.8287,
+        "false_alarm_rate": 0.1971
+      }
+    },
+    "liquid blue x0.9": {
+      "mix_rule_cnn": {
+        "roc_auc": 0.8987,
+        "f1": 0.7799,
+        "recall": 0.8315,
+        "false_alarm_rate": 0.1971
+      }
+    },
+    "liquid blue x1.1": {
+      "mix_rule_cnn": {
+        "roc_auc": 0.8979,
+        "f1": 0.7759,
+        "recall": 0.8245,
+        "false_alarm_rate": 0.1971
+      }
+    },
+    "liquid darker x0.85": {
+      "mix_rule_cnn": {
+        "roc_auc": 0.898,
+        "f1": 0.78,
+        "recall": 0.8245,
+        "false_alarm_rate": 0.1898
+      }
+    },
+    "liquid lighter x1.15": {
+      "mix_rule_cnn": {
+        "roc_auc": 0.8964,
+        "f1": 0.7735,
+        "recall": 0.8203,
+        "false_alarm_rate": 0.1971
+      }
+    },
+    "camera darker x0.85": {
+      "mix_rule_cnn": {
+        "roc_auc": 0.8968,
+        "f1": 0.7748,
+        "recall": 0.8217,
+        "false_alarm_rate": 0.1962
+      }
+    },
+    "camera warmer r1.1 b0.9": {
+      "mix_rule_cnn": {
+        "roc_auc": 0.8981,
+        "f1": 0.7775,
+        "recall": 0.8273,
+        "false_alarm_rate": 0.1971
+      }
+    }
+  }
+}

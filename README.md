@@ -39,14 +39,15 @@ Model inputs follow a strict rule: only the image and recipe information the lin
 
 ## Results so far (twin test set: 800 vials never used in training)
 
-**Model 1**, trained on all 4 runs (4,000 vials, 8,904 pictures; 3 of the runs have random dye shades):
+Both models trained on all 4 runs (4,000 vials, 8,904 pictures; 3 of the runs have random dye shades) and scored on the **same** 800 test vials:
 
-| Model | AUC | Carryover vials caught | Clean vials falsely flagged |
-|---|---|---|---|
-| **Model 1, gradient boosting (direct)** | **0.87** | 317 of 377 | 145 of 423 |
-| Model 1, mix estimate + rule | 0.87 | 329 of 377 | 165 of 423 |
-| End-only baseline (last pour only) | 0.87 | 222 of 377 | 34 of 423 |
-| Recipe only, no image (bias check) | 0.54 | — | — |
+| Model | AUC | Mix estimate error (orange / blue) | Carryover vials caught | Clean vials falsely flagged |
+|---|---|---|---|---|
+| **Model 2: CNN (ResNet-18) + rule** | **0.90** | **2.5 / 2.1 points** | **336 of 377** | 175 of 423 |
+| Model 1: gradient boosting (direct) | 0.87 | — | 317 of 377 | 145 of 423 |
+| Model 1: mix estimate + rule | 0.87 | 4.3 / 3.5 points | 329 of 377 | 165 of 423 |
+| End-only baseline (last pour only) | 0.87 | — | 222 of 377 | 34 of 423 |
+| Recipe only, no image (bias check) | 0.54 | — | — | — |
 
 **Robustness** (AUC with the liquid's colors shifted; worst case shown):
 
@@ -54,23 +55,31 @@ Model inputs follow a strict rule: only the image and recipe information the lin
 |---|---|---|
 | Model 1, run 1 only (no random dye shades) | 0.90 | 0.72 (green ×0.9) |
 | Model 1, all runs, mix estimate + rule | 0.86 | 0.76 (green ×0.9) |
-| **Model 1, all runs, gradient boosting** | **0.87** | **0.84** |
+| Model 1, all runs, gradient boosting | 0.87 | 0.84 |
+| **Model 2, all runs** | **0.90** | **0.90** |
 
-- **Training on random dye shades made the model much more robust to color differences.** The gradient-boosting version loses only 0.03 AUC in the worst case. The scores without a shift are slightly lower because the task is honestly harder.
-- **Checking after every pour catches more carryover** than checking only the finished vial (329 vs 222 of 377), at the cost of more false alarms.
-- **Most false alarms come from pour 1,** where the unknown leftover amount blurs what "clean" looks like. Judging pours 2+ only, the mix-estimate model flags 54 of 386 clean vials and still catches 223 of 323 carryover vials. Knowing the station's real leftover volume would cut pour-1 false alarms further.
+**Pours 2+ only** (pour 1 left to the end check):
+
+| Model | Clean vials falsely flagged | Carryover vials caught |
+|---|---|---|
+| **Model 2** | **30 of 386 (8%)** | **225 of 323 (70%)** |
+| Model 1, mix estimate + rule | 54 of 386 (14%) | 223 of 323 (69%) |
+
+- **Model 2 is the best so far:** the most accurate mix estimate, the highest AUC, and almost no loss under color shifts. It trains in about 7 minutes on one GPU.
+- **Training on random dye shades made both models more robust to color differences.** Caveat: the robustness test shifts colors the same way model 2's training augmentation does, so its flat result partly reflects what it practiced. Real video is the true test.
+- **Checking after every pour catches more carryover** than checking only the finished vial (336 vs 222 of 377), at the cost of more false alarms.
+- **Most false alarms come from pour 1,** where the unknown leftover amount blurs what "clean" looks like (40% of clean first pours are flagged by model 2). Skipping pour-1 alarms gives the best balance. Knowing the station's real leftover volume would cut them further.
 - The recipe alone can't predict the answer (AUC 0.54), so the twin data doesn't leak it.
-- Results were independently re-checked three times by separate AI reviewers (see "AI assistance").
-- **Model 2** passed a GPU smoke test; the full training run is next.
+- Model 1's results were independently re-checked three times by separate AI reviewers (see "AI assistance").
 
-Full metrics: `model/results/model1_all/metrics.json` (all runs) and `model/results/model1/metrics.json` (run 1 only).
+Full metrics: `model/results/model2/` (model 2), `model/results/model1_all/` (model 1, all runs) and `model/results/model1/` (model 1, run 1 only). Model 2's weights (`model.pt`, 43 MB) are not in git.
 
 ## Known limits
 
 - **Twin colors aren't calibrated to the real camera** (orange renders too red). Random dye shades in training reduce the damage from color differences (see Robustness), and a short calibration period on the real line is planned to line the colors up.
 - The twin's dye colors were first estimated from video-5 vials, before video 5 was reserved for validation. Random dye shades dilute this, and it will be reported with the final results.
 - In the twin, liquid is always fully mixed and settled; carryover is the only fault simulated.
-- Not yet tested on real video.
+- Not yet tested on real video. Twin vials without random dye shades are easier for model 2 (1.4 vs 3.0 points of mix error), a reminder that real colors will be harder.
 
 ## How to run
 
