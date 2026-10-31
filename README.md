@@ -55,3 +55,16 @@ git clone <this repository's URL from the green "Code" button>
 - Before the finals, replace this README with your project: the problem, your approach, results, how to run it, and credits.
 
 **Can't push or see this repository?** Open the [team workspace](https://dashboard.all-ai-network.org/j/L36HEH) and press the GitHub check button. If it still doesn't work, ping Brett Storoe in `#hackathon-general` on Slack.
+
+## Our work so far (Dataset 2: Fluid Mixing)
+
+Camera-only check for older filling machines: after each pour, does the vial's color match what the recipe should look like at that pour? (Main cause of a mismatch: carryover from the previous recipe.) See `PROCESS.md` for the plan and status, and `docs/DATASET_GENERATION.md` for how the twin pictures are made and which label columns may be model inputs.
+
+| Folder | What's in it |
+|---|---|
+| `twin_tools/` | `render_dataset.py`: the digital-twin picture generator (Isaac Sim 5.1, run on YAAD); `recipe_rules.json`: the recipe rules |
+| `model/` | `build_table.py` (pictures → table), `train_color_model.py` (model 1 + robustness test), `train_cnn.py` (model 2, GPU) |
+| `model/tables/`, `model/results/` | The table from run 1 and model 1's results |
+| `samples/` | 24 example twin pictures; `samples.csv` lists their recipe, pour and carryover |
+
+**Full twin image sets are not in git** (too large). They are on the YAAD team workspace: runs `train_camera_s1001` (1,000 vials, 2,255 pictures), `train_jitter_s2001`, `train_jitter_s2002`, `train_jitter_s2003` (1,000 vials each, random dye shade and vial position). Ask the team for access. The organizers' digital twin (`csi_digital_twin_v1`) is in the Innovation Lab data folder.

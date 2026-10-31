@@ -1,0 +1,8 @@
+# Full twin image sets live on the YAAD workspace (see README); too large for git
+twin_runs/
+# The organizers' original example script: use the copy in their twin download
+twin_tools/render_example.py
+# Model weights
+*.pt
+__pycache__/
+.DS_Store

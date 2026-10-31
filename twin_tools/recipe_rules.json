@@ -1,0 +1,34 @@
+{
+  "_about": "Recipe rules for the CSI fluid mixing station (Dataset 2). Read by render_dataset.py; every recipe it renders is checked against these. Edit here, not in the script.",
+  "tanks": {
+    "T100": {"color": "clear", "role": "diluent", "column": "t100_ml"},
+    "T200": {"color": "orange", "role": "dye", "column": "t200_ml"},
+    "T400": {"color": "blue", "role": "dye", "column": "t400_ml"}
+  },
+  "forbidden_tanks": ["T300"],
+  "dispense_order": ["T200", "T400", "T100"],
+  "max_total_ml": 80,
+  "min_ml_per_used_tank": 10,
+  "max_ml_per_tank": {"T100": 80, "T200": 50, "T400": 80},
+  "sources": {
+    "tank_colors": "Dataset README section 4: T100 = clear (diluent), T200 = orange, T400 = blue.",
+    "forbidden_tanks": "Dataset 2 page: 'Do not use T-300 in a recipe. It has a configuration issue that can also require a reset.'",
+    "dispense_order": "Dataset README / Dataset 2 page: each fill dispenses T200 first, then T400, then T100, skipping any tank the recipe does not use.",
+    "max_total_ml": "Dataset 2 page: 'A vial should contain no more than 80 mL to avoid spilling.'",
+    "min_ml_per_used_tank": "Dataset 2 page: 'the station should not use less than 10 mL of a selected component in practice.'",
+    "max_ml_per_tank": "Dataset 2 page: components may be 0 to 80 mL; 'Do not put more than 50 mL from T200 in a recipe. It can fault the system.'",
+    "real_recipes": "vial_fill/labels/video5_vial_recipes.csv (video 5, 3 vials per recipe)."
+  },
+  "real_recipes": [
+    {"recipe_id": 5,  "T200": 10, "T400": 10, "T100": 10},
+    {"recipe_id": 6,  "T200": 10, "T400": 0,  "T100": 30},
+    {"recipe_id": 7,  "T200": 0,  "T400": 50, "T100": 20},
+    {"recipe_id": 8,  "T200": 20, "T400": 20, "T100": 20},
+    {"recipe_id": 9,  "T200": 35, "T400": 35, "T100": 10},
+    {"recipe_id": 10, "T200": 15, "T400": 15, "T100": 45},
+    {"recipe_id": 11, "T200": 10, "T400": 50, "T100": 10},
+    {"recipe_id": 12, "T200": 50, "T400": 10, "T100": 10},
+    {"recipe_id": 13, "T200": 50, "T400": 20, "T100": 0},
+    {"recipe_id": 14, "T200": 0,  "T400": 10, "T100": 60}
+  ]
+}
