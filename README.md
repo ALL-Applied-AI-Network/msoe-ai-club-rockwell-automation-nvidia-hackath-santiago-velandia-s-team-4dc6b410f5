@@ -1,70 +1,90 @@
-# Rockwell Automation + NVIDIA Innovation Lab · Fall 2026
+# Pour-by-Pour Color Check for Vial Filling
 
-This is your team's repository for the four-week physical AI hackathon run by Rockwell Automation, NVIDIA, the MSOE AI Club and UWM's Connected Systems Institute. Build everything here. Sponsors can follow your work as it progresses, and your final submission links straight to this repository.
+**Rockwell Automation + NVIDIA Innovation Lab, Fall 2026 · Dataset 2: Fluid Mixing Station 3**
 
-**Full event guide** (datasets, compute, rules, judging, prizes): <https://msoe-maic.com/library/?article=Rockwell-NVIDIA-Fall-2026>
-**Your team workspace** (team, repository access, submissions): <https://dashboard.all-ai-network.org/j/L36HEH>
-**Questions:** [join the hackathon Slack](https://join.slack.com/t/rockwellnvidi-wq82211/shared_invite/zt-4bp05nsn9-UW3afFtM9wjzWtZiQoJBHg) and ask in the channel that matches your question. The event guide's "Getting help" section says who to ping for what.
+A camera-only add-on for older filling machines. After each pour, it checks whether the vial's color matches what the recipe should look like at that point, and alerts the operator when it doesn't. The main fault it targets is **carryover**: leftover liquid from the previous recipe in the shared mixing path that ends up in the next vial.
 
-## Key dates
+> Status: work in progress (branch `ap`). Results below are on digital-twin test data only. Real-video testing is next.
 
-| When | What |
-|---|---|
-| Thu Oct 8, 4:00–6:00 PM | Kickoff at Rockwell Automation HQ, 1201 S 2nd St, Milwaukee |
-| **Wed Oct 14, 11:59 PM CT** | **Team plan due:** [submit it here](https://dashboard.all-ai-network.org/s/V28NHK) |
-| **Sun Nov 1, 11:59 PM CT** | **Final submission due:** [submit it here](https://dashboard.all-ai-network.org/s/V28NHK) |
-| Thu Nov 5, 5:00–8:00 PM | Finals at MSOE Diercks Hall: live presentations and prizes |
+---
 
-## First week
+## How it works
 
-- [ ] Everyone on the team has an ALL AI Network account and has joined this team in the [workspace](https://dashboard.all-ai-network.org/j/L36HEH).
-- [ ] Everyone has connected GitHub and accepted the repository invitation (check your GitHub email, or open the workspace and press the check button).
-- [ ] Pick your dataset. We recommend one strong solution around a single dataset.
-- [ ] Download the data and make sure everyone who needs it can open it.
-- [ ] Read the compute guide and decide what you'll need.
-- [ ] Join Slack, open `#hackathon-announcements`, and find your dataset's channel.
-- [ ] Submit the [team plan](https://dashboard.all-ai-network.org/s/V28NHK) by Wednesday, October 14. It's a short resource request, not a graded paper, and any teammate can update it before the deadline.
+1. **Training data from the digital twin.** We render the organizers' Isaac Sim fill station from the same angle as the real fill camera, taking **one picture after each pour**. Each vial gets a real or random valid recipe, and about half follow a different recipe (carryover). Lighting, camera look, dye shade and vial position vary per vial. Every picture is labeled for free.
+2. **Break each picture into a table.** We measure the liquid color in 8 strips down the vial, divided by the white panel's color so lighting cancels out, and add the recipe and pour number.
+3. **Estimate the mix, then compare.** A model estimates the orange and blue shares in the vial from the colors. If the estimate is far from what a clean vial of that recipe should have at that pour, we **flag it**. For example: *"pour 1: about 66% orange, a clean vial would be 92%"*.
+4. **On the real line** (planned), a pour-stop detector takes the snapshot after each pour. A short calibration period with a few clean vials per recipe lines the model up with the real camera.
 
-## The three datasets
+## Results so far (twin test set: 200 vials never used in training)
 
-1. **[Final Vial Inspection](https://msoe-maic.com/library?article=Rockwell-NVIDIA-Fall-2026-Vial-Inspection):** find missing caps, crooked caps, damaged vials and unexpected empty positions after the robot fills a fixture.
-2. **[Fluid Mixing Station 3](https://msoe-maic.com/library?article=Rockwell-NVIDIA-Fall-2026-Fluid-Mixing):** use synchronized camera views to detect fill and color problems caused by recipes and fluid carryover.
-3. **[Grasping and Sorting](https://msoe-maic.com/library?article=Rockwell-NVIDIA-Fall-2026-Grasping-Sorting):** use a digital twin and multiple cameras to make a standalone FANUC arm grasp and sort objects more reliably.
+| Model | AUC | Carryover vials caught | Clean vials falsely flagged |
+|---|---|---|---|
+| **Model 1: color strips + mix estimate + rule** | **0.90** | **84 of 100** | 32 of 100 |
+| End-only baseline (last pour only) | 0.83 | 66 of 100 | 27 of 100 |
+| Recipe only, no image (bias check) | 0.54 | — | — |
 
-## Read before your team plan
+- Checking after every pour catches more carryover than checking only the finished vial.
+- **Most false alarms come from pour 1,** where the unknown leftover amount blurs what "clean" looks like. Judging pours 2+ only, false alarms drop to 5 of 89 clean vials.
+- The recipe alone can't predict the answer, so the twin data doesn't leak it.
+- Results were independently re-checked three times by separate AI reviewers (see "AI assistance").
+- **Model 2** (ResNet-18 image network on YAAD) is built and in testing. Its results are coming.
 
-- **[Compute: Brev, DGX Spark and build.nvidia.com](https://msoe-maic.com/library?article=Rockwell-NVIDIA-Fall-2026-Compute).** Brev credits are spent whenever an instance is running, so stop instances you aren't using.
-- **[Collect and test your own data](https://msoe-maic.com/library?article=Rockwell-NVIDIA-Fall-2026-Data-Collection):** visits, extra data, digital twins, and booking a supervised test on the real equipment.
-- **[Tools and resources](https://msoe-maic.com/library?article=Rockwell-NVIDIA-Fall-2026-Resources):** AI coding tools, vision-language models, NVIDIA Cosmos and more. Start with a simple baseline.
+## Known limits
 
-## Final submission (Sun Nov 1)
+- **Twin colors aren't calibrated to the real camera** (orange renders too red). A 10% shift in the liquid's green channel drops model 1's AUC from 0.90 to 0.72. Training with random dye shades and the real-line calibration period address this.
+- The twin's dye colors were first estimated from video-5 vials, before we reserved video 5 for validation. Random dye shades dilute this, and we'll report it with the final results.
+- In the twin, liquid is always fully mixed and settled; carryover is the only fault simulated.
+- Not yet tested on real video.
 
-- A video of about five minutes
-- A one-page project summary
-- A link to this repository
-- References and credits for data, models, code and tools
+## How to run
 
-## Working in this repository
+Python 3 with `numpy`, `pandas`, `opencv-python`, `scikit-learn`. Model 2 also needs `torch` and `torchvision` (we use the `nvcr.io/nvidia/pytorch:25.10-py3` container on a GPU).
 
 ```bash
-git clone <this repository's URL from the green "Code" button>
+# 1. Plan a twin dataset on a laptop (no Isaac Sim; writes labels.csv only)
+python twin_tools/render_dataset.py --dry-run --count 20 --out-dir dataset_plan
+
+# 2. Render it (Isaac Sim 5.1, e.g. on YAAD, from the twin folder)
+/isaac-sim/python.sh tools/render_dataset.py --twin /job/in --count 1000 --variations 1 --seed 2001 \
+    --styles camera --dye-jitter 0.2 --pos-jitter 4 --out-dir /job/out
+
+# 3. Pictures -> table
+python model/build_table.py twin_runs/<run>/out
+
+# 4. Model 1 (+ robustness test) -> model/results/model1/
+python model/train_color_model.py model/tables/<run>.csv
+
+# 5. Model 2 (GPU) -> model/results/model2/
+python model/train_cnn.py --table model/tables/<run>.csv --pretrained
 ```
 
-- Commit early and push often. Mentors and judges see what's here.
-- **Don't commit large datasets or model weights.** Keep them out with `.gitignore` and note in this README where to download them.
-- Before the finals, replace this README with your project: the problem, your approach, results, how to run it, and credits.
-
-**Can't push or see this repository?** Open the [team workspace](https://dashboard.all-ai-network.org/j/L36HEH) and press the GitHub check button. If it still doesn't work, ping Brett Storoe in `#hackathon-general` on Slack.
-
-## Our work so far (Dataset 2: Fluid Mixing)
-
-Camera-only check for older filling machines: after each pour, does the vial's color match what the recipe should look like at that pour? (Main cause of a mismatch: carryover from the previous recipe.) See `PROCESS.md` for the plan and status, and `docs/DATASET_GENERATION.md` for how the twin pictures are made and which label columns may be model inputs.
-
-| Folder | What's in it |
+| Folder | Contents |
 |---|---|
-| `twin_tools/` | `render_dataset.py`: the digital-twin picture generator (Isaac Sim 5.1, run on YAAD); `recipe_rules.json`: the recipe rules |
-| `model/` | `build_table.py` (pictures → table), `train_color_model.py` (model 1 + robustness test), `train_cnn.py` (model 2, GPU) |
-| `model/tables/`, `model/results/` | The table from run 1 and model 1's results |
-| `samples/` | 24 example twin pictures; `samples.csv` lists their recipe, pour and carryover |
+| `twin_tools/` | `render_dataset.py` (twin picture generator), `recipe_rules.json` (recipe rules + the 10 real recipes) |
+| `model/` | `build_table.py`, `train_color_model.py`, `train_cnn.py`; `tables/` and `results/` |
+| `samples/` | 24 example twin pictures; `samples.csv` lists recipe, pour and carryover for each |
+| `docs/DATASET_GENERATION.md` | How the twin data is made, every label column, and which columns may be model inputs |
+| `PROCESS.md` | Plan and status |
 
-**Full twin image sets are not in git** (too large). They are on the YAAD team workspace: runs `train_camera_s1001` (1,000 vials, 2,255 pictures), `train_jitter_s2001`, `train_jitter_s2002`, `train_jitter_s2003` (1,000 vials each, random dye shade and vial position). Ask the team for access. The organizers' digital twin (`csi_digital_twin_v1`) is in the Innovation Lab data folder.
+## Data
+
+- **The organizers' data and digital twin** (`csi-vial-fill-dataset`, `csi_digital_twin_v1`): the Innovation Lab data folder. Real videos are used for testing only, never for training.
+- **Our twin pictures** (~9,000 pictures from 4 runs of 1,000 vials, plus masks and labels): on the YAAD team workspace, not in git because of their size. Ask the team for access.
+- **Data plan:** train/test on twin pictures (80/20, split by vial); extra test on real videos 1–4; final validation once on real video 5.
+
+## Credits
+
+- **Data, digital twin and line:** Rockwell Automation, NVIDIA, UWM Connected Systems Institute (CSI), MSOE AI Club.
+- **Compute:** YAAD DGX Spark cluster.
+- **Tools and models:** NVIDIA Isaac Sim 5.1 and Omniverse Replicator; NVIDIA PyTorch container; ResNet-18 (torchvision, ImageNet weights); scikit-learn, OpenCV, pandas, NumPy.
+
+### AI assistance
+
+We used **Claude Code** (Anthropic) as an AI coding assistant. Its role:
+- **Wrote and tested the code** in this repo (the twin generator, table builder and both models), following the team's decisions on the data plan, labels and rules.
+- **Checked data quality:** reviewed rendered pictures, found and fixed problems (for example, an unfair "expected color" reference at pour 1 and a too-small color patch), and flagged biases in the twin data.
+- **Enforced the rules we set:** no label leakage into model inputs, split by vial, and video 5 kept for final validation.
+- **Ran independent verification:** three separate AI reviewers re-computed the table, labels and metrics.
+- **Helped plan and document:** process outline, docs and YAAD job settings.
+
+The team made the decisions (what to build, the data plan, which runs to launch) and launched and monitored all GPU jobs.
