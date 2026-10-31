@@ -1,0 +1,1601 @@
+vial_uid,run,image,recipe_id,stage,expected_clean_orange,expected_clean_blue,off_spec,carryover,actual_orange,actual_blue,est_orange,est_blue,matches,reason,answer
+1001-16,train_camera_s1001,images/camera/s0016_p2_v1.jpg,6,2,0.25,0.0,0,0,0.25,0.0,0.1,0.0,True,"The vial contains 10 mL of orange dye, as per the recipe, with no blue dye added, resulting in a consistent orange hue without any unexpected color changes.","```json
+{
+    ""orange_pct"": 10,
+    ""blue_pct"": 0,
+    ""matches"": true,
+    ""reason"": ""The vial contains 10 mL of orange dye, as per the recipe, with no blue dye added, resulting in a consistent orange hue without any unexpected color changes.""
+}
+```"
+1001-42,train_camera_s1001,images/camera/s0042_p1_v1.jpg,N031,1,0.8304,0.1211,1,1,0.626,0.0,0.8,0.1,False,"The liquid appears predominantly orange with only a small amount of blue visible, indicating a significant imbalance compared to the expected 83% orange and 12% blue.","```json
+{
+  ""orange_pct"": 80,
+  ""blue_pct"": 10,
+  ""matches"": false,
+  ""reason"": ""The liquid appears predominantly orange with only a small amount of blue visible, indicating a significant imbalance compared to the expected 83% orange and 12% blue.""
+}
+```"
+1001-49,train_camera_s1001,images/camera/s0049_p2_v1.jpg,9,2,0.4848,0.4848,0,0,0.4908,0.4908,0.45,0.45,False,"The observed orange and blue percentages are both higher than expected, indicating a potential overfilling or incorrect mixing ratio during the pouring process.","```json
+{
+    ""orange_pct"": 45,
+    ""blue_pct"": 45,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages are both higher than expected, indicating a potential overfilling or incorrect mixing ratio during the pouring process.""
+}
+```"
+1001-59,train_camera_s1001,images/camera/s0059_p1_v1.jpg,7,1,0.0,0.9091,0,0,0.0,0.8557,0.0,0.91,True,"The vial contains only blue dye, which aligns with the expected composition of 91% blue after pouring 50 mL of blue dye as the first pour.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 91,
+    ""matches"": true,
+    ""reason"": ""The vial contains only blue dye, which aligns with the expected composition of 91% blue after pouring 50 mL of blue dye as the first pour.""
+}
+```"
+1001-66,train_camera_s1001,images/camera/s0066_p2_v1.jpg,N047,2,0.5385,0.4615,1,1,0.4075,0.2521,0.55,0.45,False,"The observed orange percentage is higher than expected due to leftover liquid from the previous recipe, which altered the color composition.","```json
+{
+    ""orange_pct"": 55,
+    ""blue_pct"": 45,
+    ""matches"": false,
+    ""reason"": ""The observed orange percentage is higher than expected due to leftover liquid from the previous recipe, which altered the color composition.""
+}
+```"
+1001-70,train_camera_s1001,images/camera/s0070_p2_v1.jpg,N050,2,0.1667,0.0,1,1,0.2861,0.1792,0.17,0.0,True,The observed color corresponds to the expected mixture based on the pour sequence and volumes specified.,"```json
+{
+    ""orange_pct"": 17,
+    ""blue_pct"": 0,
+    ""matches"": true,
+    ""reason"": ""The observed color corresponds to the expected mixture based on the pour sequence and volumes specified.""
+}
+```"
+1001-84,train_camera_s1001,images/camera/s0084_p1_v1.jpg,10,1,0.5172,0.1207,0,0,0.4438,0.1391,0.5,0.1,False,"The observed orange percentage is significantly higher than expected, while the blue percentage is lower, indicating a mismatch in the mixing ratio.","```json
+{
+  ""orange_pct"": 50,
+  ""blue_pct"": 10,
+  ""matches"": false,
+  ""reason"": ""The observed orange percentage is significantly higher than expected, while the blue percentage is lower, indicating a mismatch in the mixing ratio.""
+}
+```"
+1001-89,train_camera_s1001,images/camera/s0089_p2_v1.jpg,N064,2,0.5455,0.4545,1,1,0.5105,0.4008,0.3,0.25,True,"The vial contains 30 mL of orange dye and 25 mL of blue dye, which aligns with the expected ratio for a correctly filled vial as per recipe N064.","```json
+{
+    ""orange_pct"": 30,
+    ""blue_pct"": 25,
+    ""matches"": true,
+    ""reason"": ""The vial contains 30 mL of orange dye and 25 mL of blue dye, which aligns with the expected ratio for a correctly filled vial as per recipe N064.""
+}
+```"
+1001-113,train_camera_s1001,images/camera/s0113_p2_v1.jpg,N082,2,0.8333,0.1667,0,0,0.8333,0.1667,0.85,0.15,True,"The liquid appears predominantly orange with a small amount of blue, aligning closely with the expected 83% orange and 17% blue after pour 2.","```json
+{
+    ""orange_pct"": 85,
+    ""blue_pct"": 15,
+    ""matches"": true,
+    ""reason"": ""The liquid appears predominantly orange with a small amount of blue, aligning closely with the expected 83% orange and 17% blue after pour 2.""
+}
+```"
+1001-116,train_camera_s1001,images/camera/s0116_p1_v1.jpg,N084,1,0.0,0.7273,0,0,0.0,0.7273,0.0,0.73,True,"The vial contains primarily blue dye, consistent with the expected composition of 73% blue after pouring 20 mL into the vial.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 73,
+    ""matches"": true,
+    ""reason"": ""The vial contains primarily blue dye, consistent with the expected composition of 73% blue after pouring 20 mL into the vial.""
+}
+```"
+1001-219,train_camera_s1001,images/camera/s0219_p1_v1.jpg,N155,1,0.0,1.0,1,1,0.0657,0.7371,0.0,1.0,True,"The vial contains only blue dye, consistent with the expected composition after pouring 35 mL of blue dye as per recipe N155.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 100,
+    ""matches"": true,
+    ""reason"": ""The vial contains only blue dye, consistent with the expected composition after pouring 35 mL of blue dye as per recipe N155.""
+}
+```"
+1001-223,train_camera_s1001,images/camera/s0223_p1_v1.jpg,N157,1,0.3951,0.2593,0,0,0.3095,0.2959,0.35,0.2,False,"The observed colors indicate a higher proportion of orange dye compared to the expected 40%, suggesting a deviation from the target mixture.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 20,
+    ""matches"": false,
+    ""reason"": ""The observed colors indicate a higher proportion of orange dye compared to the expected 40%, suggesting a deviation from the target mixture.""
+}
+```"
+1001-238,train_camera_s1001,images/camera/s0238_p1_v1.jpg,9,1,0.7805,0.1707,0,0,0.8798,0.0935,0.65,0.25,False,"The observed orange and blue percentages do not align with the expected ratio of 78% orange and 17% blue, indicating a discrepancy in the mixing process.","```json
+{
+  ""orange_pct"": 65,
+  ""blue_pct"": 25,
+  ""matches"": false,
+  ""reason"": ""The observed orange and blue percentages do not align with the expected ratio of 78% orange and 17% blue, indicating a discrepancy in the mixing process.""
+}
+```"
+1001-256,train_camera_s1001,images/camera/s0256_p1_v1.jpg,13,1,0.9091,0.0909,1,1,0.7789,0.0553,0.85,0.15,False,"The liquid appears predominantly orange with a slight hint of blue, indicating a higher proportion of orange than expected based on the recipe. The blue dye seems minimal, suggesting it hasn't been fully incorporated yet.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 15,
+  ""matches"": false,
+  ""reason"": ""The liquid appears predominantly orange with a slight hint of blue, indicating a higher proportion of orange than expected based on the recipe. The blue dye seems minimal, suggesting it hasn't been fully incorporated yet.""
+}
+```"
+1001-280,train_camera_s1001,images/camera/s0280_p1_v1.jpg,5,1,0.5,0.25,1,1,0.875,0.0,0.33,0.33,False,"The observed orange and blue percentages do not align with the expected 50% orange and 25% blue, indicating a discrepancy in the mixing ratio.","```json
+{
+  ""orange_pct"": 33,
+  ""blue_pct"": 33,
+  ""matches"": false,
+  ""reason"": ""The observed orange and blue percentages do not align with the expected 50% orange and 25% blue, indicating a discrepancy in the mixing ratio.""
+}
+```"
+1001-283,train_camera_s1001,images/camera/s0283_p2_v1.jpg,N201,2,0.5769,0.2885,0,0,0.5474,0.2737,0.45,0.2,False,The observed orange and blue percentages do not align with the expected ratio of 58% orange and 29% blue after two pours. The higher orange content suggests either incomplete mixing or residual effects from previous recipes.,"```json
+{
+    ""orange_pct"": 45,
+    ""blue_pct"": 20,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages do not align with the expected ratio of 58% orange and 29% blue after two pours. The higher orange content suggests either incomplete mixing or residual effects from previous recipes.""
+}
+```"
+1001-329,train_camera_s1001,images/camera/s0329_p1_v1.jpg,N231,1,0.0,1.0,0,0,0.0,1.0,0.0,1.0,True,"The liquid in the vial appears uniformly blue, indicating that all orange dye has been replaced by blue, aligning with the expected result of recipe N231.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 100,
+    ""matches"": true,
+    ""reason"": ""The liquid in the vial appears uniformly blue, indicating that all orange dye has been replaced by blue, aligning with the expected result of recipe N231.""
+}
+```"
+1001-338,train_camera_s1001,images/camera/s0338_p3_v1.jpg,N237,3,0.3125,0.5,1,1,0.2965,0.5641,0.25,0.4,True,"The vial contains the correct volumes of orange and blue dyes as per the recipe, with the remaining volume being clear water, resulting in the expected color mixture.","```json
+{
+    ""orange_pct"": 25,
+    ""blue_pct"": 40,
+    ""matches"": true,
+    ""reason"": ""The vial contains the correct volumes of orange and blue dyes as per the recipe, with the remaining volume being clear water, resulting in the expected color mixture.""
+}
+```"
+1001-364,train_camera_s1001,images/camera/s0364_p2_v1.jpg,N258,2,0.7402,0.1851,1,1,0.6569,0.2409,0.65,0.2,False,The observed orange and blue percentages do not align with the expected ratio of 74% orange and 19% blue. The higher orange content suggests either incomplete mixing or leftover liquid affecting the current pour.,"```json
+{
+    ""orange_pct"": 65,
+    ""blue_pct"": 20,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages do not align with the expected ratio of 74% orange and 19% blue. The higher orange content suggests either incomplete mixing or leftover liquid affecting the current pour.""
+}
+```"
+1001-423,train_camera_s1001,images/camera/s0423_p1_v1.jpg,N305,1,1.0,0.0,1,1,0.9429,0.0571,1.0,0.0,True,"The vial appears to be completely filled with orange dye, with no visible blue or clear water, aligning with the expected composition of recipe N305.","```json
+{
+    ""orange_pct"": 100,
+    ""blue_pct"": 0,
+    ""matches"": true,
+    ""reason"": ""The vial appears to be completely filled with orange dye, with no visible blue or clear water, aligning with the expected composition of recipe N305.""
+}
+```"
+1001-473,train_camera_s1001,images/camera/s0473_p2_v1.jpg,N339,2,0.7273,0.1818,1,1,0.7176,0.2466,0.65,0.15,False,The observed orange and blue percentages do not align with the expected ratio of 73% orange and 18% blue. The higher orange content suggests either incomplete mixing or leftover liquid affecting the current pour.,"```json
+{
+    ""orange_pct"": 65,
+    ""blue_pct"": 15,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages do not align with the expected ratio of 73% orange and 18% blue. The higher orange content suggests either incomplete mixing or leftover liquid affecting the current pour.""
+}
+```"
+1001-488,train_camera_s1001,images/camera/s0488_p2_v1.jpg,14,2,0.0,0.1429,1,1,0.2589,0.0837,0.0,0.14,True,"The vial contains 10 mL of blue dye and 60 mL of clear water, resulting in 14% blue dye as per the expected ratio.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 14,
+    ""matches"": true,
+    ""reason"": ""The vial contains 10 mL of blue dye and 60 mL of clear water, resulting in 14% blue dye as per the expected ratio.""
+}
+```"
+1001-548,train_camera_s1001,images/camera/s0548_p1_v1.jpg,N397,1,0.8727,0.1273,0,0,0.8664,0.1336,0.85,0.15,True,"The observed color leans towards a darker orange hue with subtle hints of blue, which aligns with the expected mixture of 87% orange and 13% blue based on the pour sequence.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 15,
+  ""matches"": true,
+  ""reason"": ""The observed color leans towards a darker orange hue with subtle hints of blue, which aligns with the expected mixture of 87% orange and 13% blue based on the pour sequence.""
+}
+```"
+1001-549,train_camera_s1001,images/camera/s0549_p1_v1.jpg,11,1,0.4,0.5,1,1,0.8932,0.1068,0.25,0.75,False,"The liquid appears predominantly blue with a small amount of orange at the bottom, indicating that the pouring sequence has not yet reached the expected ratio of 10 mL orange, 50 mL blue, and 10 mL clear water. The current state shows a significant imbalance, suggesting the mixture is still in progress.","```json
+{
+  ""orange_pct"": 25,
+  ""blue_pct"": 75,
+  ""matches"": false,
+  ""reason"": ""The liquid appears predominantly blue with a small amount of orange at the bottom, indicating that the pouring sequence has not yet reached the expected ratio of 10 mL orange, 50 mL blue, and 10 mL clear water. The current state shows a significant imbalance, suggesting the mixture is still in progress.""
+}
+```"
+1001-563,train_camera_s1001,images/camera/s0563_p3_v1.jpg,N411,3,0.375,0.3125,0,0,0.375,0.3125,0.35,0.25,False,"The estimated orange and blue percentages do not align with the expected values based on the pour order and quantities. The orange dye appears more concentrated than intended, suggesting a higher volume than specified in the recipe.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 25,
+    ""matches"": false,
+    ""reason"": ""The estimated orange and blue percentages do not align with the expected values based on the pour order and quantities. The orange dye appears more concentrated than intended, suggesting a higher volume than specified in the recipe.""
+}
+```"
+1001-602,train_camera_s1001,images/camera/s0602_p1_v1.jpg,N451,1,0.8421,0.0,0,0,0.8946,0.0,0.84,0.0,True,"The liquid appears predominantly orange with no visible blue, aligning with the expected composition of 40 mL orange and 30 mL clear water after the first pour.","```json
+{
+  ""orange_pct"": 84,
+  ""blue_pct"": 0,
+  ""matches"": true,
+  ""reason"": ""The liquid appears predominantly orange with no visible blue, aligning with the expected composition of 40 mL orange and 30 mL clear water after the first pour.""
+}
+```"
+1001-610,train_camera_s1001,images/camera/s0610_p3_v1.jpg,11,3,0.1429,0.7143,0,0,0.1429,0.7143,0.12,0.82,False,"The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or quantities, leading to an incorrect color ratio.","```json
+{
+    ""orange_pct"": 12,
+    ""blue_pct"": 82,
+    ""matches"": false,
+    ""reason"": ""The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or quantities, leading to an incorrect color ratio.""
+}
+```"
+1001-649,train_camera_s1001,images/camera/s0649_p1_v1.jpg,13,1,0.9091,0.0909,1,1,1.0,0.0,0.85,0.15,False,"The liquid appears predominantly orange with a slight blue tint, indicating a higher proportion of orange than expected, and the blue content is lower than anticipated.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 15,
+  ""matches"": false,
+  ""reason"": ""The liquid appears predominantly orange with a slight blue tint, indicating a higher proportion of orange than expected, and the blue content is lower than anticipated.""
+}
+```"
+1001-729,train_camera_s1001,images/camera/s0729_p1_v1.jpg,13,1,0.9091,0.0909,0,1,0.9409,0.0296,0.85,0.1,False,"The observed color leans more towards red-orange rather than the expected deep brown or olive shade, indicating a higher proportion of orange dye than intended.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 10,
+  ""matches"": false,
+  ""reason"": ""The observed color leans more towards red-orange rather than the expected deep brown or olive shade, indicating a higher proportion of orange dye than intended.""
+}
+```"
+1001-744,train_camera_s1001,images/camera/s0744_p1_v1.jpg,N539,1,0.5217,0.4783,0,0,0.5949,0.4051,0.35,0.6,False,"The observed colors suggest a mix closer to a darker shade, likely due to insufficient orange and blue dye proportions as per the expected recipe.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 60,
+    ""matches"": false,
+    ""reason"": ""The observed colors suggest a mix closer to a darker shade, likely due to insufficient orange and blue dye proportions as per the expected recipe.""
+}
+```"
+1001-778,train_camera_s1001,images/camera/s0778_p1_v1.jpg,N562,1,0.0,1.0,0,0,0.0,1.0,0.0,1.0,True,"The vial contains only blue dye, consistent with the expected composition after pouring 70 mL of blue dye as per the recipe.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 100,
+    ""matches"": true,
+    ""reason"": ""The vial contains only blue dye, consistent with the expected composition after pouring 70 mL of blue dye as per the recipe.""
+}
+```"
+1001-812,train_camera_s1001,images/camera/s0812_p3_v1.jpg,10,3,0.2,0.2,0,0,0.2,0.2,0.25,0.25,True,"The observed colors align with the expected mixture of 20% orange and 20% blue, given the pouring order and volume proportions.","```json
+{
+    ""orange_pct"": 25,
+    ""blue_pct"": 25,
+    ""matches"": true,
+    ""reason"": ""The observed colors align with the expected mixture of 20% orange and 20% blue, given the pouring order and volume proportions.""
+}
+```"
+1001-878,train_camera_s1001,images/camera/s0878_p1_v1.jpg,6,1,0.4324,0.0,1,1,0.2,0.1143,0.33,0.0,True,"The observed orange dye concentration (33%) aligns with the expected ratio for Recipe 6, which specifies 10 mL of orange dye per 10 mL of total volume after pouring.","```json
+{
+  ""orange_pct"": 33,
+  ""blue_pct"": 0,
+  ""matches"": true,
+  ""reason"": ""The observed orange dye concentration (33%) aligns with the expected ratio for Recipe 6, which specifies 10 mL of orange dye per 10 mL of total volume after pouring.""
+}
+```"
+1001-887,train_camera_s1001,images/camera/s0887_p1_v1.jpg,12,1,0.9091,0.0455,1,1,0.883,0.117,0.85,0.07,False,"The observed color leans more towards red-orange rather than the expected brownish hue, indicating a higher proportion of orange dye compared to blue, which might suggest an inconsistency in the pouring ratio or leftover liquid affecting the mixture.","```json
+{
+    ""orange_pct"": 85,
+    ""blue_pct"": 7,
+    ""matches"": false,
+    ""reason"": ""The observed color leans more towards red-orange rather than the expected brownish hue, indicating a higher proportion of orange dye compared to blue, which might suggest an inconsistency in the pouring ratio or leftover liquid affecting the mixture.""
+}
+```"
+1001-887,train_camera_s1001,images/camera/s0887_p2_v1.jpg,12,2,0.8,0.16,1,1,0.7816,0.2184,0.8,0.16,True,The observed color aligns closely with the expected 80% orange and 16% blue composition based on the pouring sequence and volume ratios.,"```json
+{
+    ""orange_pct"": 80,
+    ""blue_pct"": 16,
+    ""matches"": true,
+    ""reason"": ""The observed color aligns closely with the expected 80% orange and 16% blue composition based on the pouring sequence and volume ratios.""
+}
+```"
+1001-888,train_camera_s1001,images/camera/s0888_p2_v1.jpg,9,2,0.4848,0.4848,0,1,0.4333,0.4333,0.45,0.45,False,"The observed orange and blue percentages are significantly higher than the expected 48%, indicating a deviation from the target mixture.","```json
+{
+  ""orange_pct"": 45,
+  ""blue_pct"": 45,
+  ""matches"": false,
+  ""reason"": ""The observed orange and blue percentages are significantly higher than the expected 48%, indicating a deviation from the target mixture.""
+}
+```"
+1001-914,train_camera_s1001,images/camera/s0914_p1_v1.jpg,5,1,0.5,0.25,0,0,0.6,0.2,0.33,0.33,False,"The observed orange and blue percentages do not align with the expected 50% orange and 25% blue, indicating a discrepancy in the mixing ratio.","```json
+{
+  ""orange_pct"": 33,
+  ""blue_pct"": 33,
+  ""matches"": false,
+  ""reason"": ""The observed orange and blue percentages do not align with the expected 50% orange and 25% blue, indicating a discrepancy in the mixing ratio.""
+}
+```"
+1001-914,train_camera_s1001,images/camera/s0914_p3_v1.jpg,5,3,0.3333,0.3333,0,0,0.3333,0.3333,0.32,0.32,True,"The observed color appears to align closely with the expected 33% orange and 33% blue mixture, suggesting proper filling according to the recipe.","```json
+{
+    ""orange_pct"": 32,
+    ""blue_pct"": 32,
+    ""matches"": true,
+    ""reason"": ""The observed color appears to align closely with the expected 33% orange and 33% blue mixture, suggesting proper filling according to the recipe.""
+}
+```"
+1001-939,train_camera_s1001,images/camera/s0939_p3_v1.jpg,N702,3,0.1667,0.4167,0,0,0.1667,0.4167,0.15,0.4,False,"The observed orange and blue percentages do not align with the expected values for recipe N702, indicating potential issues with the mixing process or leftover liquid affecting the color.","```json
+{
+    ""orange_pct"": 15,
+    ""blue_pct"": 40,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages do not align with the expected values for recipe N702, indicating potential issues with the mixing process or leftover liquid affecting the color.""
+}
+```"
+1001-941,train_camera_s1001,images/camera/s0941_p2_v1.jpg,N703,2,0.5437,0.3883,1,1,0.5833,0.4167,0.35,0.25,True,"The vial contains the correct volumes of orange and blue dyes as per the recipe, with the remaining volume being clear water. The observed color is a blend consistent with the expected mixture, indicating proper filling.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 25,
+    ""matches"": true,
+    ""reason"": ""The vial contains the correct volumes of orange and blue dyes as per the recipe, with the remaining volume being clear water. The observed color is a blend consistent with the expected mixture, indicating proper filling.""
+}
+```"
+1001-946,train_camera_s1001,images/camera/s0946_p1_v1.jpg,11,1,0.4,0.5,0,0,0.3017,0.5819,0.2,0.6,False,"The observed colors indicate a significant deviation from the expected mixture. With only 20% orange and 60% blue, the vial lacks the required 40% orange content, suggesting either incomplete mixing or leftover liquids altering the composition.","```json
+{
+  ""orange_pct"": 20,
+  ""blue_pct"": 60,
+  ""matches"": false,
+  ""reason"": ""The observed colors indicate a significant deviation from the expected mixture. With only 20% orange and 60% blue, the vial lacks the required 40% orange content, suggesting either incomplete mixing or leftover liquids altering the composition.""
+}
+```"
+1001-951,train_camera_s1001,images/camera/s0951_p2_v1.jpg,N713,2,0.5625,0.4375,1,1,0.6166,0.3834,0.5,0.4,False,The estimated orange and blue percentages do not align with the expected 56% orange and 44% blue due to potential leftover liquid altering the mixture.,"```json
+{
+    ""orange_pct"": 50,
+    ""blue_pct"": 40,
+    ""matches"": false,
+    ""reason"": ""The estimated orange and blue percentages do not align with the expected 56% orange and 44% blue due to potential leftover liquid altering the mixture.""
+}
+```"
+1001-973,train_camera_s1001,images/camera/s0973_p1_v1.jpg,8,1,0.6316,0.1842,1,1,0.5,0.0,0.5,0.5,False,"The observed orange and blue percentages are both 50, which significantly deviates from the expected 63% orange and 18% blue, indicating an imbalance likely due to leftover liquid from a previous recipe.","```json
+{
+  ""orange_pct"": 50,
+  ""blue_pct"": 50,
+  ""matches"": false,
+  ""reason"": ""The observed orange and blue percentages are both 50, which significantly deviates from the expected 63% orange and 18% blue, indicating an imbalance likely due to leftover liquid from a previous recipe.""
+}
+```"
+1001-990,train_camera_s1001,images/camera/s0990_p1_v1.jpg,N748,1,0.4112,0.2617,1,1,0.3231,0.1692,0.35,0.15,False,"The observed orange and blue percentages do not align with the expected ratios. After pouring 10 mL of orange followed by 20 mL of blue, the expected orange concentration is approximately 35%, while the blue is around 15%. However, the current observation shows significantly lower values, indicating either incomplete mixing or leftover liquid affecting the ratio.","```json
+{
+  ""orange_pct"": 35,
+  ""blue_pct"": 15,
+  ""matches"": false,
+  ""reason"": ""The observed orange and blue percentages do not align with the expected ratios. After pouring 10 mL of orange followed by 20 mL of blue, the expected orange concentration is approximately 35%, while the blue is around 15%. However, the current observation shows significantly lower values, indicating either incomplete mixing or leftover liquid affecting the ratio.""
+}
+```"
+2001-71,train_jitter_s2001,images/camera/s0071_p2_v1.jpg,8,2,0.4364,0.4364,0,1,0.4372,0.4372,0.35,0.35,False,"The observed colors suggest a mix closer to a darker shade, likely due to uneven mixing or residual liquids altering the expected ratio of orange and blue dyes.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 35,
+    ""matches"": false,
+    ""reason"": ""The observed colors suggest a mix closer to a darker shade, likely due to uneven mixing or residual liquids altering the expected ratio of orange and blue dyes.""
+}
+```"
+2001-72,train_jitter_s2001,images/camera/s0072_p3_v1.jpg,9,3,0.4375,0.4375,1,1,0.5361,0.3834,0.45,0.45,True,"The observed color appears to align closely with the expected 44% orange and 44% blue mixture, suggesting proper adherence to the pouring sequence and volume ratios.","```json
+{
+    ""orange_pct"": 45,
+    ""blue_pct"": 45,
+    ""matches"": true,
+    ""reason"": ""The observed color appears to align closely with the expected 44% orange and 44% blue mixture, suggesting proper adherence to the pouring sequence and volume ratios.""
+}
+```"
+2001-78,train_jitter_s2001,images/camera/s0078_p3_v1.jpg,10,3,0.2,0.2,0,0,0.2,0.2,0.25,0.25,True,"The observed colors align with the expected mixture where both orange and blue dyes are present in equal parts, resulting in a consistent brownish shade as per the recipe proportions.","```json
+{
+    ""orange_pct"": 25,
+    ""blue_pct"": 25,
+    ""matches"": true,
+    ""reason"": ""The observed colors align with the expected mixture where both orange and blue dyes are present in equal parts, resulting in a consistent brownish shade as per the recipe proportions.""
+}
+```"
+2001-90,train_jitter_s2001,images/camera/s0090_p1_v1.jpg,10,1,0.5172,0.1207,0,0,0.4902,0.1275,0.3,0.2,False,"The observed orange and blue percentages do not align with the expected proportions for recipe 10, which requires 52% orange and 12% blue. The current colors suggest a significant deviation from the target mixture.","```json
+{
+  ""orange_pct"": 30,
+  ""blue_pct"": 20,
+  ""matches"": false,
+  ""reason"": ""The observed orange and blue percentages do not align with the expected proportions for recipe 10, which requires 52% orange and 12% blue. The current colors suggest a significant deviation from the target mixture.""
+}
+```"
+2001-90,train_jitter_s2001,images/camera/s0090_p2_v1.jpg,10,2,0.3704,0.3704,0,0,0.3597,0.3597,0.35,0.35,True,"The observed colors align closely with the expected 37% orange and 37% blue, suggesting proper mixing despite minor variations from leftover liquid.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 35,
+    ""matches"": true,
+    ""reason"": ""The observed colors align closely with the expected 37% orange and 37% blue, suggesting proper mixing despite minor variations from leftover liquid.""
+}
+```"
+2001-102,train_jitter_s2001,images/camera/s0102_p1_v1.jpg,8,1,0.6316,0.1842,1,1,0.4375,0.4018,0.5,0.5,False,"The liquid appears uniformly brownish-green, indicating equal mixing of orange and blue dyes, which does not align with the expected distribution of 63% orange and 18% blue.","```json
+{
+  ""orange_pct"": 50,
+  ""blue_pct"": 50,
+  ""matches"": false,
+  ""reason"": ""The liquid appears uniformly brownish-green, indicating equal mixing of orange and blue dyes, which does not align with the expected distribution of 63% orange and 18% blue.""
+}
+```"
+2001-105,train_jitter_s2001,images/camera/s0105_p1_v1.jpg,12,1,0.9091,0.0455,1,1,0.7307,0.2693,0.85,0.07,False,"The observed color leans more towards a reddish-brown hue rather than the expected deep brown or olive shade, indicating a higher proportion of orange dye than anticipated.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 7,
+  ""matches"": false,
+  ""reason"": ""The observed color leans more towards a reddish-brown hue rather than the expected deep brown or olive shade, indicating a higher proportion of orange dye than anticipated.""
+}
+```"
+2001-184,train_jitter_s2001,images/camera/s0184_p2_v1.jpg,12,2,0.8,0.16,0,0,0.8037,0.1607,0.8,0.16,True,"The observed color aligns closely with the expected ratio of 80% orange and 16% blue, indicating successful mixing according to the planned recipe.","```json
+{
+    ""orange_pct"": 80,
+    ""blue_pct"": 16,
+    ""matches"": true,
+    ""reason"": ""The observed color aligns closely with the expected ratio of 80% orange and 16% blue, indicating successful mixing according to the planned recipe.""
+}
+```"
+2001-186,train_jitter_s2001,images/camera/s0186_p3_v1.jpg,N127,3,0.4375,0.3125,1,1,0.3559,0.2738,0.38,0.27,False,"The observed orange percentage (38) exceeds the expected 44%, indicating a potential overfill or incorrect mixing ratio. The blue percentage (27) is below the expected 31%, suggesting insufficient blue dye was added or residual effects from previous recipes altered the mixture.","```json
+{
+  ""orange_pct"": 38,
+  ""blue_pct"": 27,
+  ""matches"": false,
+  ""reason"": ""The observed orange percentage (38) exceeds the expected 44%, indicating a potential overfill or incorrect mixing ratio. The blue percentage (27) is below the expected 31%, suggesting insufficient blue dye was added or residual effects from previous recipes altered the mixture.""
+}
+```"
+2001-201,train_jitter_s2001,images/camera/s0201_p2_v1.jpg,N136,2,0.0,0.5,0,0,0.0,0.5,0.0,0.5,True,"The vial contains 50% blue dye, which aligns with the expected ratio for correctly filled vial after pouring 35 mL of blue dye followed by 35 mL of clear water.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 50,
+    ""matches"": true,
+    ""reason"": ""The vial contains 50% blue dye, which aligns with the expected ratio for correctly filled vial after pouring 35 mL of blue dye followed by 35 mL of clear water.""
+}
+```"
+2001-218,train_jitter_s2001,images/camera/s0218_p1_v1.jpg,5,1,0.5,0.25,0,0,0.5,0.25,0.33,0.33,False,"The observed colors indicate a significant amount of orange and blue dyes, but the exact distribution isn't clear. However, given the expected ratio of 50% orange and 25% blue, the current state suggests a higher concentration than anticipated, possibly due to leftover liquids altering the mixture.","```json
+{
+    ""orange_pct"": 33,
+    ""blue_pct"": 33,
+    ""matches"": false,
+    ""reason"": ""The observed colors indicate a significant amount of orange and blue dyes, but the exact distribution isn't clear. However, given the expected ratio of 50% orange and 25% blue, the current state suggests a higher concentration than anticipated, possibly due to leftover liquids altering the mixture.""
+}
+```"
+2001-245,train_jitter_s2001,images/camera/s0245_p2_v1.jpg,10,2,0.3704,0.3704,1,1,0.4713,0.4713,0.35,0.35,True,"The observed colors align closely with the expected 37% orange and 37% blue, suggesting proper mixing despite minor variations from leftover liquid.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 35,
+    ""matches"": true,
+    ""reason"": ""The observed colors align closely with the expected 37% orange and 37% blue, suggesting proper mixing despite minor variations from leftover liquid.""
+}
+```"
+2001-252,train_jitter_s2001,images/camera/s0252_p1_v1.jpg,13,1,0.9091,0.0909,0,0,0.8706,0.1294,0.85,0.15,False,"The liquid appears predominantly orange with a slight hint of blue, indicating a higher proportion of orange than expected based on the recipe. The blue dye seems minimal, suggesting it hasn't been fully incorporated yet.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 15,
+  ""matches"": false,
+  ""reason"": ""The liquid appears predominantly orange with a slight hint of blue, indicating a higher proportion of orange than expected based on the recipe. The blue dye seems minimal, suggesting it hasn't been fully incorporated yet.""
+}
+```"
+2001-257,train_jitter_s2001,images/camera/s0257_p2_v1.jpg,N181,2,0.7692,0.0,1,1,0.5964,0.274,0.75,0.0,True,"The liquid appears predominantly orange with no visible blue, aligning with the expected composition of 77% orange and 23% clear water after pouring.","```json
+{
+  ""orange_pct"": 75,
+  ""blue_pct"": 0,
+  ""matches"": true,
+  ""reason"": ""The liquid appears predominantly orange with no visible blue, aligning with the expected composition of 77% orange and 23% clear water after pouring.""
+}
+```"
+2001-268,train_jitter_s2001,images/camera/s0268_p1_v1.jpg,14,1,0.0,0.4,1,1,0.2011,0.5977,0.0,0.4,True,"The vial contains 10 mL of blue dye and 60 mL of clear water, which aligns with the expected composition for Recipe 14 after the first pour.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 40,
+    ""matches"": true,
+    ""reason"": ""The vial contains 10 mL of blue dye and 60 mL of clear water, which aligns with the expected composition for Recipe 14 after the first pour.""
+}
+```"
+2001-288,train_jitter_s2001,images/camera/s0288_p2_v1.jpg,6,2,0.25,0.0,1,1,0.4583,0.1667,0.1,0.0,True,"The vial contains 10 mL of orange dye, as per the recipe, with no blue dye added, resulting in a clear appearance consistent with the expected 75% clear water content.","```json
+{
+    ""orange_pct"": 10,
+    ""blue_pct"": 0,
+    ""matches"": true,
+    ""reason"": ""The vial contains 10 mL of orange dye, as per the recipe, with no blue dye added, resulting in a clear appearance consistent with the expected 75% clear water content.""
+}
+```"
+2001-320,train_jitter_s2001,images/camera/s0320_p2_v1.jpg,N234,2,0.8333,0.1667,1,1,0.5642,0.2942,0.85,0.15,True,"The observed color leans towards a darker orange-brown shade, which aligns with the expected mixture of 83% orange and 17% blue, indicating proper adherence to the recipe.","```json
+{
+    ""orange_pct"": 85,
+    ""blue_pct"": 15,
+    ""matches"": true,
+    ""reason"": ""The observed color leans towards a darker orange-brown shade, which aligns with the expected mixture of 83% orange and 17% blue, indicating proper adherence to the recipe.""
+}
+```"
+2001-393,train_jitter_s2001,images/camera/s0393_p1_v1.jpg,N292,1,0.7904,0.2096,1,1,1.0,0.0,0.65,0.3,False,"The observed colors indicate a higher concentration of orange dye compared to the expected ratio, suggesting either an error in the pouring process or leftover liquid affecting the mixture.","```json
+{
+    ""orange_pct"": 65,
+    ""blue_pct"": 30,
+    ""matches"": false,
+    ""reason"": ""The observed colors indicate a higher concentration of orange dye compared to the expected ratio, suggesting either an error in the pouring process or leftover liquid affecting the mixture.""
+}
+```"
+2001-396,train_jitter_s2001,images/camera/s0396_p3_v1.jpg,12,3,0.7143,0.1429,0,0,0.7143,0.1429,0.65,0.08,False,"The observed orange percentage is significantly higher than expected, while the blue percentage is much lower, indicating a major discrepancy between the actual mixture and the intended recipe.","```json
+{
+    ""orange_pct"": 65,
+    ""blue_pct"": 8,
+    ""matches"": false,
+    ""reason"": ""The observed orange percentage is significantly higher than expected, while the blue percentage is much lower, indicating a major discrepancy between the actual mixture and the intended recipe.""
+}
+```"
+2001-405,train_jitter_s2001,images/camera/s0405_p3_v1.jpg,N302,3,0.2,0.1333,0,0,0.2,0.1333,0.2,0.13,True,The observed colors align with the expected proportions based on the pour sequence and volumes specified for Recipe N302.,"```json
+{
+    ""orange_pct"": 20,
+    ""blue_pct"": 13,
+    ""matches"": true,
+    ""reason"": ""The observed colors align with the expected proportions based on the pour sequence and volumes specified for Recipe N302.""
+}
+```"
+2001-431,train_jitter_s2001,images/camera/s0431_p2_v1.jpg,N327,2,0.5198,0.4455,1,1,0.4676,0.3482,0.35,0.3,True,"The vial contains the specified volumes of orange and blue dyes as per the pouring order, resulting in the correct color composition.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 30,
+    ""matches"": true,
+    ""reason"": ""The vial contains the specified volumes of orange and blue dyes as per the pouring order, resulting in the correct color composition.""
+}
+```"
+2001-492,train_jitter_s2001,images/camera/s0492_p1_v1.jpg,12,1,0.9091,0.0455,1,1,0.65,0.0875,0.85,0.07,False,"The observed color leans more towards red-orange rather than the expected deep brown or olive shade, indicating a significant deviation from the target color composition.","```json
+{
+    ""orange_pct"": 85,
+    ""blue_pct"": 7,
+    ""matches"": false,
+    ""reason"": ""The observed color leans more towards red-orange rather than the expected deep brown or olive shade, indicating a significant deviation from the target color composition.""
+}
+```"
+2001-501,train_jitter_s2001,images/camera/s0501_p1_v1.jpg,6,1,0.4324,0.0,0,0,0.708,0.0,1.0,0.0,True,"The vial contains only orange dye, which aligns with the specified recipe of 10 mL of orange dye being poured first.","```json
+{
+  ""orange_pct"": 100,
+  ""blue_pct"": 0,
+  ""matches"": true,
+  ""reason"": ""The vial contains only orange dye, which aligns with the specified recipe of 10 mL of orange dye being poured first.""
+}
+```"
+2001-527,train_jitter_s2001,images/camera/s0527_p1_v1.jpg,N400,1,0.8955,0.1045,0,0,0.8357,0.1643,0.85,0.15,False,"The liquid appears predominantly orange with a small amount of blue near the top, indicating that the blue dye has not been fully incorporated yet.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 15,
+  ""matches"": false,
+  ""reason"": ""The liquid appears predominantly orange with a small amount of blue near the top, indicating that the blue dye has not been fully incorporated yet.""
+}
+```"
+2001-545,train_jitter_s2001,images/camera/s0545_p1_v1.jpg,N417,1,1.0,0.0,1,1,0.7467,0.1267,1.0,0.0,True,"The vial contains only orange dye, consistent with the expected result of pouring 50 mL of orange dye followed by 0 mL of blue and clear water.","```json
+{
+    ""orange_pct"": 100,
+    ""blue_pct"": 0,
+    ""matches"": true,
+    ""reason"": ""The vial contains only orange dye, consistent with the expected result of pouring 50 mL of orange dye followed by 0 mL of blue and clear water.""
+}
+```"
+2001-589,train_jitter_s2001,images/camera/s0589_p2_v1.jpg,N453,2,0.3333,0.0,1,1,0.4593,0.0,0.15,0.0,True,"The vial contains only orange dye as per the recipe, with no blue dye present, resulting in a consistent orange hue.","```json
+{
+    ""orange_pct"": 15,
+    ""blue_pct"": 0,
+    ""matches"": true,
+    ""reason"": ""The vial contains only orange dye as per the recipe, with no blue dye present, resulting in a consistent orange hue.""
+}
+```"
+2001-595,train_jitter_s2001,images/camera/s0595_p2_v1.jpg,11,2,0.16,0.8,0,0,0.1641,0.8206,0.12,0.88,False,"The observed color is predominantly blue with a significant amount of orange, indicating a mismatch where the blue dye exceeds expectations while the orange is less than expected.","```json
+{
+    ""orange_pct"": 12,
+    ""blue_pct"": 88,
+    ""matches"": false,
+    ""reason"": ""The observed color is predominantly blue with a significant amount of orange, indicating a mismatch where the blue dye exceeds expectations while the orange is less than expected.""
+}
+```"
+2001-603,train_jitter_s2001,images/camera/s0603_p2_v1.jpg,14,2,0.0,0.1429,0,0,0.0,0.1429,0.0,0.14,True,"The vial contains 10 mL of blue dye and 60 mL of clear water, resulting in 14% blue dye as per the expected ratio.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 14,
+    ""matches"": true,
+    ""reason"": ""The vial contains 10 mL of blue dye and 60 mL of clear water, resulting in 14% blue dye as per the expected ratio.""
+}
+```"
+2001-608,train_jitter_s2001,images/camera/s0608_p1_v1.jpg,10,1,0.5172,0.1207,0,0,0.641,0.0897,0.5,0.1,False,"The observed orange percentage is significantly higher than expected, while the blue percentage is lower, indicating a mismatch in the mixing ratio.","```json
+{
+  ""orange_pct"": 50,
+  ""blue_pct"": 10,
+  ""matches"": false,
+  ""reason"": ""The observed orange percentage is significantly higher than expected, while the blue percentage is lower, indicating a mismatch in the mixing ratio.""
+}
+```"
+2001-608,train_jitter_s2001,images/camera/s0608_p2_v1.jpg,10,2,0.3704,0.3704,0,0,0.4132,0.4132,0.35,0.35,True,"The observed colors align closely with the expected 37% orange and 37% blue, suggesting proper mixing despite minor variations from leftover liquid.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 35,
+    ""matches"": true,
+    ""reason"": ""The observed colors align closely with the expected 37% orange and 37% blue, suggesting proper mixing despite minor variations from leftover liquid.""
+}
+```"
+2001-620,train_jitter_s2001,images/camera/s0620_p2_v1.jpg,N474,2,0.4286,0.5714,0,1,0.3857,0.6143,0.3,0.5,True,"The vial contains a mixture of orange and blue dyes in the specified proportions, resulting in a consistent brownish-green shade as per the expected recipe.","```json
+{
+    ""orange_pct"": 30,
+    ""blue_pct"": 50,
+    ""matches"": true,
+    ""reason"": ""The vial contains a mixture of orange and blue dyes in the specified proportions, resulting in a consistent brownish-green shade as per the expected recipe.""
+}
+```"
+2001-622,train_jitter_s2001,images/camera/s0622_p2_v1.jpg,9,2,0.4848,0.4848,0,0,0.4844,0.4844,0.45,0.45,False,"The observed orange and blue percentages are significantly higher than the expected 48%, indicating a deviation from the target mixture.","```json
+{
+  ""orange_pct"": 45,
+  ""blue_pct"": 45,
+  ""matches"": false,
+  ""reason"": ""The observed orange and blue percentages are significantly higher than the expected 48%, indicating a deviation from the target mixture.""
+}
+```"
+2001-635,train_jitter_s2001,images/camera/s0635_p2_v1.jpg,N488,2,0.4667,0.5333,0,0,0.4667,0.5333,0.35,0.4,True,"The vial contains the exact volumes of orange and blue dyes specified in recipe N488, resulting in a balanced mixture as expected.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 40,
+    ""matches"": true,
+    ""reason"": ""The vial contains the exact volumes of orange and blue dyes specified in recipe N488, resulting in a balanced mixture as expected.""
+}
+```"
+2001-642,train_jitter_s2001,images/camera/s0642_p1_v1.jpg,N494,1,0.0,0.96,1,1,0.0373,0.8508,0.0,0.96,True,"The liquid appears uniformly blue with no visible orange, indicating that the required amount of orange has been fully replaced by blue, aligning with the expected composition.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 96,
+    ""matches"": true,
+    ""reason"": ""The liquid appears uniformly blue with no visible orange, indicating that the required amount of orange has been fully replaced by blue, aligning with the expected composition.""
+}
+```"
+2001-663,train_jitter_s2001,images/camera/s0663_p2_v1.jpg,N508,2,0.0,0.4,0,0,0.0,0.4,0.0,0.4,True,"The vial contains 30 mL of blue dye, which corresponds to 40% of the total volume, aligning with the expected percentage for a correctly filled vial.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 40,
+    ""matches"": true,
+    ""reason"": ""The vial contains 30 mL of blue dye, which corresponds to 40% of the total volume, aligning with the expected percentage for a correctly filled vial.""
+}
+```"
+2001-675,train_jitter_s2001,images/camera/s0675_p1_v1.jpg,N514,1,0.0,1.0,0,0,0.0,1.0,0.0,1.0,True,"The vial contains only blue dye, consistent with the expected composition after pouring 70 mL of blue dye as per the recipe.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 100,
+    ""matches"": true,
+    ""reason"": ""The vial contains only blue dye, consistent with the expected composition after pouring 70 mL of blue dye as per the recipe.""
+}
+```"
+2001-688,train_jitter_s2001,images/camera/s0688_p1_v1.jpg,N523,1,0.7904,0.0,1,1,0.9283,0.0717,0.65,0.05,False,"The liquid appears predominantly red-orange, indicating a high concentration of orange dye, while blue is almost absent. However, the expected ratio after pouring 30 mL of orange and 25 mL of clear water would result in a more diluted orange hue, closer to a light orange or pinkish tint rather than a deep red-orange. Additionally, there should be no visible blue, which aligns with the recipe. The current color suggests either an error in the pouring process or a mixing issue.","```json
+{
+  ""orange_pct"": 65,
+  ""blue_pct"": 5,
+  ""matches"": false,
+  ""reason"": ""The liquid appears predominantly red-orange, indicating a high concentration of orange dye, while blue is almost absent. However, the expected ratio after pouring 30 mL of orange and 25 mL of clear water would result in a more diluted orange hue, closer to a light orange or pinkish tint rather than a deep red-orange. Additionally, there should be no visible blue, which aligns with the recipe. The current color suggests either an error in the pouring process or a mixing issue.""
+}
+```"
+2001-688,train_jitter_s2001,images/camera/s0688_p2_v1.jpg,N523,2,0.5455,0.0,0,1,0.5715,0.0442,0.3,0.0,True,"The vial contains only orange dye, as per the recipe, with no blue dye present, aligning with the expected 100% orange concentration.","```json
+{
+    ""orange_pct"": 30,
+    ""blue_pct"": 0,
+    ""matches"": true,
+    ""reason"": ""The vial contains only orange dye, as per the recipe, with no blue dye present, aligning with the expected 100% orange concentration.""
+}
+```"
+2001-721,train_jitter_s2001,images/camera/s0721_p2_v1.jpg,14,2,0.0,0.1429,0,0,0.0,0.1429,0.0,0.14,True,"The vial contains 10 mL of blue dye and 60 mL of clear water, resulting in 14% blue dye as per the expected ratio.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 14,
+    ""matches"": true,
+    ""reason"": ""The vial contains 10 mL of blue dye and 60 mL of clear water, resulting in 14% blue dye as per the expected ratio.""
+}
+```"
+2001-752,train_jitter_s2001,images/camera/s0752_p2_v1.jpg,11,2,0.16,0.8,1,1,0.1906,0.7664,0.12,0.88,False,"The observed color is predominantly blue with a significant amount of orange, indicating a mismatch where the blue dye exceeds expectations while the orange is less than expected.","```json
+{
+    ""orange_pct"": 12,
+    ""blue_pct"": 88,
+    ""matches"": false,
+    ""reason"": ""The observed color is predominantly blue with a significant amount of orange, indicating a mismatch where the blue dye exceeds expectations while the orange is less than expected.""
+}
+```"
+2001-782,train_jitter_s2001,images/camera/s0782_p2_v1.jpg,N593,2,0.3333,0.6667,1,1,0.1667,0.8333,0.33,0.67,True,The observed color corresponds to the expected mixture of 33% orange and 67% blue based on the pour sequence and volumes.,"```json
+{
+    ""orange_pct"": 33,
+    ""blue_pct"": 67,
+    ""matches"": true,
+    ""reason"": ""The observed color corresponds to the expected mixture of 33% orange and 67% blue based on the pour sequence and volumes.""
+}
+```"
+2001-812,train_jitter_s2001,images/camera/s0812_p3_v1.jpg,N615,3,0.2,0.2667,1,1,0.2583,0.2526,0.18,0.29,False,"The observed orange and blue percentages do not align with the expected proportions for recipe N615, indicating a potential issue with the mixing process or leftover liquid affecting the color.","```json
+{
+    ""orange_pct"": 18,
+    ""blue_pct"": 29,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages do not align with the expected proportions for recipe N615, indicating a potential issue with the mixing process or leftover liquid affecting the color.""
+}
+```"
+2001-828,train_jitter_s2001,images/camera/s0828_p1_v1.jpg,N633,1,0.6154,0.0,1,1,0.434,0.4043,0.6,0.0,True,"The liquid appears predominantly orange with no visible blue, aligning with the expected composition of 60% orange and 0% blue after pouring 20 mL of orange dye first.","```json
+{
+    ""orange_pct"": 60,
+    ""blue_pct"": 0,
+    ""matches"": true,
+    ""reason"": ""The liquid appears predominantly orange with no visible blue, aligning with the expected composition of 60% orange and 0% blue after pouring 20 mL of orange dye first.""
+}
+```"
+2001-833,train_jitter_s2001,images/camera/s0833_p2_v1.jpg,9,2,0.4848,0.4848,0,0,0.4754,0.4754,0.45,0.45,False,"The observed orange and blue percentages are both higher than expected, indicating a potential over-pour of either dye during the filling process.","```json
+{
+    ""orange_pct"": 45,
+    ""blue_pct"": 45,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages are both higher than expected, indicating a potential over-pour of either dye during the filling process.""
+}
+```"
+2001-861,train_jitter_s2001,images/camera/s0861_p1_v1.jpg,N659,1,0.0,1.0,1,1,0.0778,0.8444,0.0,1.0,True,"The vial contains only blue dye, consistent with the expected composition after pouring 75 mL of blue dye as per the recipe.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 100,
+    ""matches"": true,
+    ""reason"": ""The vial contains only blue dye, consistent with the expected composition after pouring 75 mL of blue dye as per the recipe.""
+}
+```"
+2001-862,train_jitter_s2001,images/camera/s0862_p1_v1.jpg,N660,1,0.8304,0.1696,0,0,0.8304,0.1696,0.85,0.15,True,"The liquid appears predominantly orange with a small amount of blue, indicating a high concentration of orange dye and minimal blue, aligning with the expected ratio for Recipe N660.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 15,
+  ""matches"": true,
+  ""reason"": ""The liquid appears predominantly orange with a small amount of blue, indicating a high concentration of orange dye and minimal blue, aligning with the expected ratio for Recipe N660.""
+}
+```"
+2001-884,train_jitter_s2001,images/camera/s0884_p2_v1.jpg,5,2,0.4,0.4,1,1,0.5692,0.4308,0.35,0.35,False,"The observed color appears more brownish than expected, suggesting insufficient clear water content.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 35,
+    ""matches"": false,
+    ""reason"": ""The observed color appears more brownish than expected, suggesting insufficient clear water content.""
+}
+```"
+2001-884,train_jitter_s2001,images/camera/s0884_p3_v1.jpg,5,3,0.3333,0.3333,1,1,0.4744,0.359,0.32,0.32,True,"The observed color appears to align closely with the expected 33% orange and 33% blue mixture, suggesting proper filling according to the recipe.","```json
+{
+    ""orange_pct"": 32,
+    ""blue_pct"": 32,
+    ""matches"": true,
+    ""reason"": ""The observed color appears to align closely with the expected 33% orange and 33% blue mixture, suggesting proper filling according to the recipe.""
+}
+```"
+2001-978,train_jitter_s2001,images/camera/s0978_p3_v1.jpg,11,3,0.1429,0.7143,1,1,0.2714,0.6071,0.12,0.8,False,"The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or quantities.","```json
+{
+    ""orange_pct"": 12,
+    ""blue_pct"": 80,
+    ""matches"": false,
+    ""reason"": ""The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or quantities.""
+}
+```"
+2001-981,train_jitter_s2001,images/camera/s0981_p2_v1.jpg,9,2,0.4848,0.4848,1,1,0.3291,0.5342,0.45,0.45,False,"The observed orange and blue percentages are significantly higher than the expected 48%, indicating an overfill or incorrect mixing ratio.","```json
+{
+    ""orange_pct"": 45,
+    ""blue_pct"": 45,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages are significantly higher than the expected 48%, indicating an overfill or incorrect mixing ratio.""
+}
+```"
+2002-27,train_jitter_s2002,images/camera/s0027_p1_v1.jpg,12,1,0.9091,0.0455,0,1,0.9067,0.0933,0.85,0.07,False,"The observed color leans more towards red-orange rather than the expected brownish hue, indicating a higher proportion of orange dye compared to blue, which might not align perfectly with the targeted ratio.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 7,
+  ""matches"": false,
+  ""reason"": ""The observed color leans more towards red-orange rather than the expected brownish hue, indicating a higher proportion of orange dye compared to blue, which might not align perfectly with the targeted ratio.""
+}
+```"
+2002-34,train_jitter_s2002,images/camera/s0034_p1_v1.jpg,13,1,0.9091,0.0909,1,1,0.8056,0.1361,0.85,0.15,False,"The liquid appears predominantly orange with a slight tint of blue, indicating a higher concentration of orange dye than expected, which might be due to leftover liquid from a previous recipe.","```json
+{
+    ""orange_pct"": 85,
+    ""blue_pct"": 15,
+    ""matches"": false,
+    ""reason"": ""The liquid appears predominantly orange with a slight tint of blue, indicating a higher concentration of orange dye than expected, which might be due to leftover liquid from a previous recipe.""
+}
+```"
+2002-50,train_jitter_s2002,images/camera/s0050_p2_v1.jpg,12,2,0.8,0.16,0,0,0.8037,0.1607,0.8,0.16,True,The observed color aligns closely with the expected 80% orange and 16% blue composition based on the pouring sequence and volume ratios.,"```json
+{
+    ""orange_pct"": 80,
+    ""blue_pct"": 16,
+    ""matches"": true,
+    ""reason"": ""The observed color aligns closely with the expected 80% orange and 16% blue composition based on the pouring sequence and volume ratios.""
+}
+```"
+2002-85,train_jitter_s2002,images/camera/s0085_p1_v1.jpg,13,1,0.9091,0.0909,0,0,0.86,0.14,0.85,0.15,False,"The liquid appears predominantly orange with a slight blue tint, indicating a higher proportion of orange than expected, and the blue content is lower than anticipated.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 15,
+  ""matches"": false,
+  ""reason"": ""The liquid appears predominantly orange with a slight blue tint, indicating a higher proportion of orange than expected, and the blue content is lower than anticipated.""
+}
+```"
+2002-97,train_jitter_s2002,images/camera/s0097_p2_v1.jpg,6,2,0.25,0.0,0,0,0.25,0.0,0.1,0.0,True,"The vial contains 10 mL of orange dye, as per the recipe, with no blue dye added, resulting in a clear orange hue consistent with the expected 25% orange concentration.","```json
+{
+    ""orange_pct"": 10,
+    ""blue_pct"": 0,
+    ""matches"": true,
+    ""reason"": ""The vial contains 10 mL of orange dye, as per the recipe, with no blue dye added, resulting in a clear orange hue consistent with the expected 25% orange concentration.""
+}
+```"
+2002-107,train_jitter_s2002,images/camera/s0107_p1_v1.jpg,N076,1,0.0,1.0,0,0,0.0,1.0,0.0,1.0,True,"The vial contains only blue dye, consistent with the expected composition after pouring 35 mL of blue dye as per recipe N076.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 100,
+    ""matches"": true,
+    ""reason"": ""The vial contains only blue dye, consistent with the expected composition after pouring 35 mL of blue dye as per recipe N076.""
+}
+```"
+2002-176,train_jitter_s2002,images/camera/s0176_p2_v1.jpg,5,2,0.4,0.4,1,1,0.32,0.32,0.35,0.35,False,"The observed color appears more greenish-brown rather than the expected brownish hue, indicating a mismatch in the dye proportions.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 35,
+    ""matches"": false,
+    ""reason"": ""The observed color appears more greenish-brown rather than the expected brownish hue, indicating a mismatch in the dye proportions.""
+}
+```"
+2002-204,train_jitter_s2002,images/camera/s0204_p2_v1.jpg,12,2,0.8,0.16,0,0,0.7982,0.1596,0.8,0.16,True,The observed color aligns closely with the expected 80% orange and 16% blue composition based on the pouring sequence and volume ratios.,"```json
+{
+    ""orange_pct"": 80,
+    ""blue_pct"": 16,
+    ""matches"": true,
+    ""reason"": ""The observed color aligns closely with the expected 80% orange and 16% blue composition based on the pouring sequence and volume ratios.""
+}
+```"
+2002-225,train_jitter_s2002,images/camera/s0225_p1_v1.jpg,13,1,0.9091,0.0909,0,0,0.8685,0.1315,0.85,0.15,False,"The liquid appears predominantly orange with a slight hint of blue, indicating a higher concentration of orange dye than expected based on the recipe, which calls for 91% orange.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 15,
+  ""matches"": false,
+  ""reason"": ""The liquid appears predominantly orange with a slight hint of blue, indicating a higher concentration of orange dye than expected based on the recipe, which calls for 91% orange.""
+}
+```"
+2002-254,train_jitter_s2002,images/camera/s0254_p2_v1.jpg,9,2,0.4848,0.4848,1,1,0.6709,0.3291,0.45,0.45,False,"The observed orange and blue percentages are both higher than expected, indicating a potential deviation from the target ratio due to leftover liquid from previous recipes.","```json
+{
+    ""orange_pct"": 45,
+    ""blue_pct"": 45,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages are both higher than expected, indicating a potential deviation from the target ratio due to leftover liquid from previous recipes.""
+}
+```"
+2002-277,train_jitter_s2002,images/camera/s0277_p2_v1.jpg,7,2,0.0,0.7143,1,1,0.1818,0.6039,0.0,0.71,True,"The liquid appears to have a consistent dark green shade, which aligns with the expected mixture of 0% orange and 50% blue dyes, adjusted for the volume of clear water added.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 71,
+    ""matches"": true,
+    ""reason"": ""The liquid appears to have a consistent dark green shade, which aligns with the expected mixture of 0% orange and 50% blue dyes, adjusted for the volume of clear water added.""
+}
+```"
+2002-319,train_jitter_s2002,images/camera/s0319_p2_v1.jpg,10,2,0.3704,0.3704,1,1,0.3621,0.5827,0.35,0.35,True,"The observed colors align closely with the expected 37% orange and 37% blue, suggesting proper mixing despite minor variations from leftover liquid.","```json
+{
+  ""orange_pct"": 35,
+  ""blue_pct"": 35,
+  ""matches"": true,
+  ""reason"": ""The observed colors align closely with the expected 37% orange and 37% blue, suggesting proper mixing despite minor variations from leftover liquid.""
+}
+```"
+2002-319,train_jitter_s2002,images/camera/s0319_p3_v1.jpg,10,3,0.2,0.2,1,1,0.197,0.317,0.25,0.25,True,The observed colors align with the expected mixture where both orange and blue dyes contribute equally to the final shade.,"```json
+{
+  ""orange_pct"": 25,
+  ""blue_pct"": 25,
+  ""matches"": true,
+  ""reason"": ""The observed colors align with the expected mixture where both orange and blue dyes contribute equally to the final shade.""
+}
+```"
+2002-323,train_jitter_s2002,images/camera/s0323_p2_v1.jpg,9,2,0.4848,0.4848,1,1,0.6279,0.3721,0.45,0.45,False,"The observed orange and blue percentages are significantly higher than the expected 48%, indicating an overfilling issue during the second pour.","```json
+{
+    ""orange_pct"": 45,
+    ""blue_pct"": 45,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages are significantly higher than the expected 48%, indicating an overfilling issue during the second pour.""
+}
+```"
+2002-338,train_jitter_s2002,images/camera/s0338_p1_v1.jpg,N244,1,0.6228,0.2934,0,0,0.6582,0.2658,0.5,0.3,False,"The observed orange and blue percentages do not align with the expected ratio of 62% orange and 29% blue, indicating either incomplete mixing or leftover liquid affecting the color.","```json
+{
+    ""orange_pct"": 50,
+    ""blue_pct"": 30,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages do not align with the expected ratio of 62% orange and 29% blue, indicating either incomplete mixing or leftover liquid affecting the color.""
+}
+```"
+2002-353,train_jitter_s2002,images/camera/s0353_p1_v1.jpg,12,1,0.9091,0.0455,0,0,0.9459,0.027,0.85,0.07,False,"The observed color leans more towards red-orange rather than the expected brownish hue, indicating a higher proportion of orange dye compared to blue, which might suggest an inconsistency in the pouring ratio or leftover liquid affecting the mixture.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 7,
+  ""matches"": false,
+  ""reason"": ""The observed color leans more towards red-orange rather than the expected brownish hue, indicating a higher proportion of orange dye compared to blue, which might suggest an inconsistency in the pouring ratio or leftover liquid affecting the mixture.""
+}
+```"
+2002-383,train_jitter_s2002,images/camera/s0383_p1_v1.jpg,N279,1,0.6667,0.3333,0,0,0.8108,0.1892,0.6,0.4,False,"The observed orange and blue percentages do not align with the expected ratio of 67% orange and 33% blue, likely due to leftover liquid affecting the mixture.","```json
+{
+    ""orange_pct"": 60,
+    ""blue_pct"": 40,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages do not align with the expected ratio of 67% orange and 33% blue, likely due to leftover liquid affecting the mixture.""
+}
+```"
+2002-387,train_jitter_s2002,images/camera/s0387_p1_v1.jpg,N284,1,0.8696,0.1304,0,0,0.8663,0.1337,0.85,0.15,True,"The observed color leans towards a deep orange hue with minimal blue, aligning closely with the expected 87% orange and 13% blue mixture.","```json
+{
+    ""orange_pct"": 85,
+    ""blue_pct"": 15,
+    ""matches"": true,
+    ""reason"": ""The observed color leans towards a deep orange hue with minimal blue, aligning closely with the expected 87% orange and 13% blue mixture.""
+}
+```"
+2002-391,train_jitter_s2002,images/camera/s0391_p1_v1.jpg,N289,1,0.0,1.0,0,0,0.0,1.0,0.0,1.0,True,"The vial contains only blue dye, consistent with the expected composition after pouring 60 mL of blue dye as per recipe N289.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 100,
+    ""matches"": true,
+    ""reason"": ""The vial contains only blue dye, consistent with the expected composition after pouring 60 mL of blue dye as per recipe N289.""
+}
+```"
+2002-402,train_jitter_s2002,images/camera/s0402_p1_v1.jpg,14,1,0.0,0.4,1,1,0.0748,0.8504,0.0,0.4,True,"The vial contains 10 mL of blue dye, which corresponds to 40% of the total volume, aligning with the expected concentration for a correctly filled vial.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 40,
+    ""matches"": true,
+    ""reason"": ""The vial contains 10 mL of blue dye, which corresponds to 40% of the total volume, aligning with the expected concentration for a correctly filled vial.""
+}
+```"
+2002-433,train_jitter_s2002,images/camera/s0433_p1_v1.jpg,9,1,0.7805,0.1707,0,0,0.8615,0.1077,0.65,0.25,False,"The observed colors indicate a higher proportion of orange dye compared to the expected 78%, suggesting a deviation from the target mixture.","```json
+{
+  ""orange_pct"": 65,
+  ""blue_pct"": 25,
+  ""matches"": false,
+  ""reason"": ""The observed colors indicate a higher proportion of orange dye compared to the expected 78%, suggesting a deviation from the target mixture.""
+}
+```"
+2002-433,train_jitter_s2002,images/camera/s0433_p3_v1.jpg,9,3,0.4375,0.4375,0,0,0.4375,0.4375,0.45,0.45,True,"The observed color appears to align closely with the expected 44% orange and 44% blue mixture, suggesting proper filling according to the recipe.","```json
+{
+  ""orange_pct"": 45,
+  ""blue_pct"": 45,
+  ""matches"": true,
+  ""reason"": ""The observed color appears to align closely with the expected 44% orange and 44% blue mixture, suggesting proper filling according to the recipe.""
+}
+```"
+2002-520,train_jitter_s2002,images/camera/s0520_p2_v1.jpg,8,2,0.4364,0.4364,0,0,0.4511,0.4511,0.35,0.35,False,"The observed colors suggest a darker shade than expected, likely due to leftover liquid from the previous recipe mixing with the new one, indicating a higher concentration of either orange or blue dye than intended.","```json
+{
+  ""orange_pct"": 35,
+  ""blue_pct"": 35,
+  ""matches"": false,
+  ""reason"": ""The observed colors suggest a darker shade than expected, likely due to leftover liquid from the previous recipe mixing with the new one, indicating a higher concentration of either orange or blue dye than intended.""
+}
+```"
+2002-566,train_jitter_s2002,images/camera/s0566_p2_v1.jpg,14,2,0.0,0.1429,0,0,0.0,0.1429,0.0,0.14,True,"The vial contains 10 mL of blue dye and 60 mL of clear water, resulting in 14% blue dye as per the expected ratio.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 14,
+    ""matches"": true,
+    ""reason"": ""The vial contains 10 mL of blue dye and 60 mL of clear water, resulting in 14% blue dye as per the expected ratio.""
+}
+```"
+2002-583,train_jitter_s2002,images/camera/s0583_p1_v1.jpg,N421,1,0.5134,0.0,0,0,0.6977,0.0,0.75,0.0,True,"The vial contains only orange dye, which aligns with the expected composition of recipe N421, as no blue dye was added during pouring.","```json
+{
+  ""orange_pct"": 75,
+  ""blue_pct"": 0,
+  ""matches"": true,
+  ""reason"": ""The vial contains only orange dye, which aligns with the expected composition of recipe N421, as no blue dye was added during pouring.""
+}
+```"
+2002-592,train_jitter_s2002,images/camera/s0592_p1_v1.jpg,N432,1,0.5172,0.4828,0,0,0.3886,0.6114,0.3,0.7,False,"The observed colors indicate a higher concentration of blue dye compared to the expected ratio, suggesting a discrepancy in the mixing process.","```json
+{
+    ""orange_pct"": 30,
+    ""blue_pct"": 70,
+    ""matches"": false,
+    ""reason"": ""The observed colors indicate a higher concentration of blue dye compared to the expected ratio, suggesting a discrepancy in the mixing process.""
+}
+```"
+2002-600,train_jitter_s2002,images/camera/s0600_p1_v1.jpg,N439,1,0.7407,0.0,0,0,0.7519,0.0,0.74,0.0,True,"The liquid appears predominantly orange with no visible blue, aligning with the expected composition of 74% orange and 26% clear water after the first pour.","```json
+{
+  ""orange_pct"": 74,
+  ""blue_pct"": 0,
+  ""matches"": true,
+  ""reason"": ""The liquid appears predominantly orange with no visible blue, aligning with the expected composition of 74% orange and 26% clear water after the first pour.""
+}
+```"
+2002-601,train_jitter_s2002,images/camera/s0601_p2_v1.jpg,5,2,0.4,0.4,0,1,0.4,0.4,0.35,0.35,False,"The observed colors suggest a mixture that leans more towards a darker shade, possibly due to uneven mixing or residual liquids altering the expected ratio. The orange and blue percentages seem inconsistent with the intended 40/40 split, indicating potential issues with the filling process or material carryover.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 35,
+    ""matches"": false,
+    ""reason"": ""The observed colors suggest a mixture that leans more towards a darker shade, possibly due to uneven mixing or residual liquids altering the expected ratio. The orange and blue percentages seem inconsistent with the intended 40/40 split, indicating potential issues with the filling process or material carryover.""
+}
+```"
+2002-602,train_jitter_s2002,images/camera/s0602_p1_v1.jpg,N440,1,0.6423,0.3577,1,1,0.3444,0.4683,0.2,0.3,False,"The vial contains a mixture where orange and blue dyes are present but not in the expected proportions. After pouring 20 mL of orange followed by 35 mL of blue, the correct ratio should be 64% orange and 36% blue, but the observed colors suggest a lower concentration of orange compared to blue.","```json
+{
+    ""orange_pct"": 20,
+    ""blue_pct"": 30,
+    ""matches"": false,
+    ""reason"": ""The vial contains a mixture where orange and blue dyes are present but not in the expected proportions. After pouring 20 mL of orange followed by 35 mL of blue, the correct ratio should be 64% orange and 36% blue, but the observed colors suggest a lower concentration of orange compared to blue.""
+}
+```"
+2002-608,train_jitter_s2002,images/camera/s0608_p1_v1.jpg,10,1,0.5172,0.1207,1,1,0.5847,0.0,0.5,0.1,False,"The observed orange percentage is significantly higher than expected, while the blue percentage is lower, indicating a mismatch in the mixing ratio.","```json
+{
+  ""orange_pct"": 50,
+  ""blue_pct"": 10,
+  ""matches"": false,
+  ""reason"": ""The observed orange percentage is significantly higher than expected, while the blue percentage is lower, indicating a mismatch in the mixing ratio.""
+}
+```"
+2002-613,train_jitter_s2002,images/camera/s0613_p1_v1.jpg,N450,1,0.9114,0.0886,1,1,0.7155,0.1423,0.85,0.1,False,"The observed color leans more towards red-orange rather than the expected deep brown or olive shade, indicating a higher proportion of orange dye than intended.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 10,
+  ""matches"": false,
+  ""reason"": ""The observed color leans more towards red-orange rather than the expected deep brown or olive shade, indicating a higher proportion of orange dye than intended.""
+}
+```"
+2002-667,train_jitter_s2002,images/camera/s0667_p1_v1.jpg,N488,1,0.8372,0.0,1,1,0.6216,0.3784,0.85,0.05,False,"The liquid appears predominantly orange with a small amount of blue, indicating a higher concentration of orange than expected, which might be due to leftover liquid from a previous recipe.","```json
+{
+    ""orange_pct"": 85,
+    ""blue_pct"": 5,
+    ""matches"": false,
+    ""reason"": ""The liquid appears predominantly orange with a small amount of blue, indicating a higher concentration of orange than expected, which might be due to leftover liquid from a previous recipe.""
+}
+```"
+2002-670,train_jitter_s2002,images/camera/s0670_p1_v1.jpg,5,1,0.5,0.25,0,0,0.5,0.25,0.33,0.17,False,"The observed orange and blue percentages do not align with the expected ratio of 50% orange and 25% blue after the first pour. The orange appears more dominant than expected, suggesting either an inconsistency in the pouring process or leftover liquid affecting the mixture.","```json
+{
+  ""orange_pct"": 33,
+  ""blue_pct"": 17,
+  ""matches"": false,
+  ""reason"": ""The observed orange and blue percentages do not align with the expected ratio of 50% orange and 25% blue after the first pour. The orange appears more dominant than expected, suggesting either an inconsistency in the pouring process or leftover liquid affecting the mixture.""
+}
+```"
+2002-682,train_jitter_s2002,images/camera/s0682_p1_v1.jpg,N499,1,0.75,0.0625,0,0,0.7343,0.0664,0.75,0.06,True,The observed colors align closely with the expected proportions for the given recipe.,"```json
+{
+  ""orange_pct"": 75,
+  ""blue_pct"": 6,
+  ""matches"": true,
+  ""reason"": ""The observed colors align closely with the expected proportions for the given recipe.""
+}
+```"
+2002-693,train_jitter_s2002,images/camera/s0693_p1_v1.jpg,11,1,0.4,0.5,1,1,0.8212,0.0894,0.25,0.75,False,"The liquid appears predominantly blue with a small amount of orange at the bottom, indicating that the pouring sequence has not yet reached the expected ratio of 10 mL orange, 50 mL blue, and 10 mL clear water. The current state shows a significant imbalance, suggesting the process is still ongoing.","```json
+{
+  ""orange_pct"": 25,
+  ""blue_pct"": 75,
+  ""matches"": false,
+  ""reason"": ""The liquid appears predominantly blue with a small amount of orange at the bottom, indicating that the pouring sequence has not yet reached the expected ratio of 10 mL orange, 50 mL blue, and 10 mL clear water. The current state shows a significant imbalance, suggesting the process is still ongoing.""
+}
+```"
+2002-693,train_jitter_s2002,images/camera/s0693_p2_v1.jpg,11,2,0.16,0.8,1,1,0.286,0.6828,0.12,0.88,False,"The liquid appears predominantly blue with a slight greenish tint, indicating a higher concentration of blue dye compared to the expected ratio. The orange dye is less visible, suggesting it hasn't been fully incorporated yet, which might be due to leftover liquid from the previous recipe.","```json
+{
+    ""orange_pct"": 12,
+    ""blue_pct"": 88,
+    ""matches"": false,
+    ""reason"": ""The liquid appears predominantly blue with a slight greenish tint, indicating a higher concentration of blue dye compared to the expected ratio. The orange dye is less visible, suggesting it hasn't been fully incorporated yet, which might be due to leftover liquid from the previous recipe.""
+}
+```"
+2002-693,train_jitter_s2002,images/camera/s0693_p3_v1.jpg,11,3,0.1429,0.7143,1,1,0.2531,0.6041,0.12,0.8,False,"The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or quantities, leading to an incorrect color ratio.","```json
+{
+    ""orange_pct"": 12,
+    ""blue_pct"": 80,
+    ""matches"": false,
+    ""reason"": ""The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or quantities, leading to an incorrect color ratio.""
+}
+```"
+2002-724,train_jitter_s2002,images/camera/s0724_p3_v1.jpg,8,3,0.3333,0.3333,1,1,0.2278,0.5444,0.35,0.35,False,"The observed orange and blue percentages are higher than expected, likely due to leftover liquid from previous recipes altering the mixture.","```json
+{
+  ""orange_pct"": 35,
+  ""blue_pct"": 35,
+  ""matches"": false,
+  ""reason"": ""The observed orange and blue percentages are higher than expected, likely due to leftover liquid from previous recipes altering the mixture.""
+}
+```"
+2002-725,train_jitter_s2002,images/camera/s0725_p1_v1.jpg,12,1,0.9091,0.0455,0,0,0.9186,0.0407,0.85,0.07,False,"The observed color leans more towards red-orange rather than the expected brownish hue, indicating a significant deviation from the target color composition.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 7,
+  ""matches"": false,
+  ""reason"": ""The observed color leans more towards red-orange rather than the expected brownish hue, indicating a significant deviation from the target color composition.""
+}
+```"
+2002-754,train_jitter_s2002,images/camera/s0754_p1_v1.jpg,N552,1,0.8546,0.1454,1,1,0.5761,0.4239,0.85,0.15,True,"The liquid appears to have a predominantly orange hue with a small amount of blue, consistent with the expected ratio after pouring 45 mL of orange followed by 35 mL of blue. There is no visible clear water, indicating the correct volume proportions were maintained.","```json
+{
+    ""orange_pct"": 85,
+    ""blue_pct"": 15,
+    ""matches"": true,
+    ""reason"": ""The liquid appears to have a predominantly orange hue with a small amount of blue, consistent with the expected ratio after pouring 45 mL of orange followed by 35 mL of blue. There is no visible clear water, indicating the correct volume proportions were maintained.""
+}
+```"
+2002-767,train_jitter_s2002,images/camera/s0767_p1_v1.jpg,10,1,0.5172,0.1207,1,1,0.2568,0.7432,0.2,0.2,False,"The observed orange and blue percentages are both 20%, which significantly deviates from the expected 52% orange and 12% blue. This suggests an inconsistency, likely due to leftover liquid altering the mixture composition.","```json
+{
+  ""orange_pct"": 20,
+  ""blue_pct"": 20,
+  ""matches"": false,
+  ""reason"": ""The observed orange and blue percentages are both 20%, which significantly deviates from the expected 52% orange and 12% blue. This suggests an inconsistency, likely due to leftover liquid altering the mixture composition.""
+}
+```"
+2002-793,train_jitter_s2002,images/camera/s0793_p3_v1.jpg,11,3,0.1429,0.7143,0,0,0.1429,0.7143,0.12,0.82,False,"The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or volume.","```json
+{
+    ""orange_pct"": 12,
+    ""blue_pct"": 82,
+    ""matches"": false,
+    ""reason"": ""The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or volume.""
+}
+```"
+2002-808,train_jitter_s2002,images/camera/s0808_p1_v1.jpg,N597,1,0.8304,0.1696,1,1,0.7799,0.2201,0.85,0.15,True,"The liquid appears predominantly orange with a small amount of blue, indicating a high concentration of orange dye and minimal blue, aligning closely with the expected ratio of 83% orange and 17% blue after pour 1.","```json
+{
+    ""orange_pct"": 85,
+    ""blue_pct"": 15,
+    ""matches"": true,
+    ""reason"": ""The liquid appears predominantly orange with a small amount of blue, indicating a high concentration of orange dye and minimal blue, aligning closely with the expected ratio of 83% orange and 17% blue after pour 1.""
+}
+```"
+2002-811,train_jitter_s2002,images/camera/s0811_p1_v1.jpg,N600,1,0.0,0.884,0,0,0.0,0.8869,0.0,0.88,True,"The vial contains primarily blue dye, consistent with the expected composition after pouring 50 mL of blue dye first, followed by clear water and orange dye in smaller quantities.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 88,
+    ""matches"": true,
+    ""reason"": ""The vial contains primarily blue dye, consistent with the expected composition after pouring 50 mL of blue dye first, followed by clear water and orange dye in smaller quantities.""
+}
+```"
+2002-824,train_jitter_s2002,images/camera/s0824_p3_v1.jpg,11,3,0.1429,0.7143,1,1,0.1834,0.4439,0.12,0.8,False,"The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or volume.","```json
+{
+    ""orange_pct"": 12,
+    ""blue_pct"": 80,
+    ""matches"": false,
+    ""reason"": ""The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or volume.""
+}
+```"
+2002-841,train_jitter_s2002,images/camera/s0841_p1_v1.jpg,11,1,0.4,0.5,0,0,0.493,0.4225,0.2,0.6,False,"The observed colors indicate a significant deviation from the expected mixture. The vial contains a higher proportion of blue dye compared to orange, which contradicts the intended ratio of 40% orange and 50% blue. Additionally, the presence of clear water at 10% suggests that the pouring sequence might have been disrupted, leading to an incorrect distribution of the dyes.","```json
+{
+    ""orange_pct"": 20,
+    ""blue_pct"": 60,
+    ""matches"": false,
+    ""reason"": ""The observed colors indicate a significant deviation from the expected mixture. The vial contains a higher proportion of blue dye compared to orange, which contradicts the intended ratio of 40% orange and 50% blue. Additionally, the presence of clear water at 10% suggests that the pouring sequence might have been disrupted, leading to an incorrect distribution of the dyes.""
+}
+```"
+2002-843,train_jitter_s2002,images/camera/s0843_p2_v1.jpg,11,2,0.16,0.8,1,1,0.2444,0.6,0.12,0.88,False,"The observed color is predominantly blue with a significant amount of orange, indicating a mismatch where the blue dye exceeds expectations while the orange is less than expected.","```json
+{
+    ""orange_pct"": 12,
+    ""blue_pct"": 88,
+    ""matches"": false,
+    ""reason"": ""The observed color is predominantly blue with a significant amount of orange, indicating a mismatch where the blue dye exceeds expectations while the orange is less than expected.""
+}
+```"
+2002-853,train_jitter_s2002,images/camera/s0853_p3_v1.jpg,5,3,0.3333,0.3333,0,0,0.3333,0.3333,0.32,0.32,True,"The observed colors align closely with the expected 33% orange and 33% blue, considering slight variations due to mixing and residual effects from prior recipes.","```json
+{
+    ""orange_pct"": 32,
+    ""blue_pct"": 32,
+    ""matches"": true,
+    ""reason"": ""The observed colors align closely with the expected 33% orange and 33% blue, considering slight variations due to mixing and residual effects from prior recipes.""
+}
+```"
+2002-862,train_jitter_s2002,images/camera/s0862_p2_v1.jpg,N642,2,0.5,0.5,0,0,0.5,0.5,0.3,0.3,False,"The liquid appears to have a darker shade than expected, likely due to leftover dye from previous recipes混入，导致颜色偏暗，未能达到预期的均匀棕色、橄榄绿或深绿色","```json
+{
+    ""orange_pct"": 30,
+    ""blue_pct"": 30,
+    ""matches"": false,
+    ""reason"": ""The liquid appears to have a darker shade than expected, likely due to leftover dye from previous recipes混入，导致颜色偏暗，未能达到预期的均匀棕色、橄榄绿或深绿色""
+}
+```"
+2002-863,train_jitter_s2002,images/camera/s0863_p1_v1.jpg,12,1,0.9091,0.0455,1,1,0.8158,0.1842,0.85,0.07,False,"The observed color leans more towards red-orange rather than the expected deep brown or olive shade, indicating a significant deviation from the target color composition.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 7,
+  ""matches"": false,
+  ""reason"": ""The observed color leans more towards red-orange rather than the expected deep brown or olive shade, indicating a significant deviation from the target color composition.""
+}
+```"
+2002-863,train_jitter_s2002,images/camera/s0863_p2_v1.jpg,12,2,0.8,0.16,1,1,0.7126,0.2874,0.8,0.1,True,"The observed color aligns closely with the expected ratio of 80% orange and 10% blue, indicating successful mixing according to the planned recipe.","```json
+{
+    ""orange_pct"": 80,
+    ""blue_pct"": 10,
+    ""matches"": true,
+    ""reason"": ""The observed color aligns closely with the expected ratio of 80% orange and 10% blue, indicating successful mixing according to the planned recipe.""
+}
+```"
+2002-863,train_jitter_s2002,images/camera/s0863_p3_v1.jpg,12,3,0.7143,0.1429,1,1,0.6327,0.2551,0.65,0.08,False,"The observed orange percentage is significantly higher than expected, while the blue percentage is much lower, indicating a major discrepancy between the actual mixture and the targeted recipe.","```json
+{
+    ""orange_pct"": 65,
+    ""blue_pct"": 8,
+    ""matches"": false,
+    ""reason"": ""The observed orange percentage is significantly higher than expected, while the blue percentage is much lower, indicating a major discrepancy between the actual mixture and the targeted recipe.""
+}
+```"
+2002-949,train_jitter_s2002,images/camera/s0949_p1_v1.jpg,10,1,0.5172,0.1207,0,0,0.6757,0.0811,0.3,0.2,False,"The observed orange and blue percentages do not align with the expected proportions for recipe 10, which requires 52% orange and 12% blue. The current colors suggest a significant deviation from the target mixture.","```json
+{
+  ""orange_pct"": 30,
+  ""blue_pct"": 20,
+  ""matches"": false,
+  ""reason"": ""The observed orange and blue percentages do not align with the expected proportions for recipe 10, which requires 52% orange and 12% blue. The current colors suggest a significant deviation from the target mixture.""
+}
+```"
+2002-953,train_jitter_s2002,images/camera/s0953_p1_v1.jpg,6,1,0.4324,0.0,0,0,0.5161,0.0,1.0,0.0,True,"The vial contains only orange dye, which aligns with the specified recipe of 10 mL of orange dye being poured first.","```json
+{
+  ""orange_pct"": 100,
+  ""blue_pct"": 0,
+  ""matches"": true,
+  ""reason"": ""The vial contains only orange dye, which aligns with the specified recipe of 10 mL of orange dye being poured first.""
+}
+```"
+2002-963,train_jitter_s2002,images/camera/s0963_p2_v1.jpg,N719,2,0.0,0.2727,0,1,0.0398,0.2877,0.0,0.27,True,"The vial contains 0 mL of orange dye and 15 mL of blue dye, which aligns with the expected composition for recipe N719 after pouring the specified volumes.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 27,
+    ""matches"": true,
+    ""reason"": ""The vial contains 0 mL of orange dye and 15 mL of blue dye, which aligns with the expected composition for recipe N719 after pouring the specified volumes.""
+}
+```"
+2002-966,train_jitter_s2002,images/camera/s0966_p1_v1.jpg,N720,1,0.527,0.0,1,1,0.693,0.307,0.6,0.0,False,"The orange dye content is significantly higher than expected, indicating that more than the required 53% has been added, possibly due to leftover liquid from a previous recipe.","```json
+{
+    ""orange_pct"": 60,
+    ""blue_pct"": 0,
+    ""matches"": false,
+    ""reason"": ""The orange dye content is significantly higher than expected, indicating that more than the required 53% has been added, possibly due to leftover liquid from a previous recipe.""
+}
+```"
+2002-987,train_jitter_s2002,images/camera/s0987_p2_v1.jpg,7,2,0.0,0.7143,1,1,0.2704,0.4439,0.0,0.71,True,"The vial contains only blue dye and clear water, aligning with the expected composition after pouring 50 mL of blue dye followed by 20 mL of clear water.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 71,
+    ""matches"": true,
+    ""reason"": ""The vial contains only blue dye and clear water, aligning with the expected composition after pouring 50 mL of blue dye followed by 20 mL of clear water.""
+}
+```"
+2003-5,train_jitter_s2003,images/camera/s0005_p1_v1.jpg,N003,1,0.5172,0.3218,1,1,0.3323,0.6677,0.2,0.4,False,"The observed orange and blue percentages do not align with the expected ratio of 52% orange and 32% blue after the first pour. The current colors suggest a lower concentration of orange and higher concentration of blue, indicating a potential issue with the pouring sequence or quantity.","```json
+{
+    ""orange_pct"": 20,
+    ""blue_pct"": 40,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages do not align with the expected ratio of 52% orange and 32% blue after the first pour. The current colors suggest a lower concentration of orange and higher concentration of blue, indicating a potential issue with the pouring sequence or quantity.""
+}
+```"
+2003-73,train_jitter_s2003,images/camera/s0073_p1_v1.jpg,8,1,0.6316,0.1842,1,1,0.7,0.3,0.5,0.5,False,"The liquid appears uniformly red, indicating a complete mix of orange and blue dyes, which does not align with the expected color gradient where orange should dominate due to higher volume.","```json
+{
+  ""orange_pct"": 50,
+  ""blue_pct"": 50,
+  ""matches"": false,
+  ""reason"": ""The liquid appears uniformly red, indicating a complete mix of orange and blue dyes, which does not align with the expected color gradient where orange should dominate due to higher volume.""
+}
+```"
+2003-74,train_jitter_s2003,images/camera/s0074_p1_v1.jpg,13,1,0.9091,0.0909,1,1,0.5025,0.2132,0.85,0.1,False,"The observed color leans more towards a reddish-brown hue rather than the expected deep brown or olive shade, indicating a higher proportion of orange dye than intended.","```json
+{
+    ""orange_pct"": 85,
+    ""blue_pct"": 10,
+    ""matches"": false,
+    ""reason"": ""The observed color leans more towards a reddish-brown hue rather than the expected deep brown or olive shade, indicating a higher proportion of orange dye than intended.""
+}
+```"
+2003-74,train_jitter_s2003,images/camera/s0074_p2_v1.jpg,13,2,0.7143,0.2857,1,1,0.4184,0.3449,0.65,0.25,False,"The observed colors suggest a higher concentration of orange dye compared to the expected 71%, indicating potential leftover liquid affecting the mixture.","```json
+{
+    ""orange_pct"": 65,
+    ""blue_pct"": 25,
+    ""matches"": false,
+    ""reason"": ""The observed colors suggest a higher concentration of orange dye compared to the expected 71%, indicating potential leftover liquid affecting the mixture.""
+}
+```"
+2003-82,train_jitter_s2003,images/camera/s0082_p1_v1.jpg,N061,1,0.3951,0.6049,1,1,1.0,0.0,0.25,0.75,True,"The vial contains a mixture where orange and blue dyes are present in a ratio of 1:7 (orange:blue), which aligns with the expected composition for Recipe N061 after the first pour.","```json
+{
+    ""orange_pct"": 25,
+    ""blue_pct"": 75,
+    ""matches"": true,
+    ""reason"": ""The vial contains a mixture where orange and blue dyes are present in a ratio of 1:7 (orange:blue), which aligns with the expected composition for Recipe N061 after the first pour.""
+}
+```"
+2003-124,train_jitter_s2003,images/camera/s0124_p2_v1.jpg,6,2,0.25,0.0,1,1,0.125,0.4,0.2,0.0,True,"The vial contains 10 mL of orange dye, which corresponds to 20% of the total volume (10 mL orange + 30 mL clear = 40 mL total). Since there is no blue dye added, the blue percentage remains 0. This aligns with the expected composition for Recipe 6 after pouring the specified amounts.","```json
+{
+  ""orange_pct"": 20,
+  ""blue_pct"": 0,
+  ""matches"": true,
+  ""reason"": ""The vial contains 10 mL of orange dye, which corresponds to 20% of the total volume (10 mL orange + 30 mL clear = 40 mL total). Since there is no blue dye added, the blue percentage remains 0. This aligns with the expected composition for Recipe 6 after pouring the specified amounts.""
+}
+```"
+2003-125,train_jitter_s2003,images/camera/s0125_p1_v1.jpg,13,1,0.9091,0.0909,0,0,0.9044,0.0956,0.85,0.15,False,"The liquid appears predominantly orange with a slight hint of blue, indicating a higher proportion of orange than expected based on the recipe. The blue dye seems minimal, suggesting it hasn't been fully incorporated yet.","```json
+{
+    ""orange_pct"": 85,
+    ""blue_pct"": 15,
+    ""matches"": false,
+    ""reason"": ""The liquid appears predominantly orange with a slight hint of blue, indicating a higher proportion of orange than expected based on the recipe. The blue dye seems minimal, suggesting it hasn't been fully incorporated yet.""
+}
+```"
+2003-139,train_jitter_s2003,images/camera/s0139_p2_v1.jpg,N108,2,0.7273,0.2727,1,1,0.4364,0.5636,0.65,0.3,False,"The observed colors suggest a higher concentration of orange dye compared to the expected 73%, indicating potential leftover liquid affecting the mixture.","```json
+{
+    ""orange_pct"": 65,
+    ""blue_pct"": 30,
+    ""matches"": false,
+    ""reason"": ""The observed colors suggest a higher concentration of orange dye compared to the expected 73%, indicating potential leftover liquid affecting the mixture.""
+}
+```"
+2003-159,train_jitter_s2003,images/camera/s0159_p2_v1.jpg,13,2,0.7143,0.2857,1,1,0.5357,0.25,0.65,0.15,False,"The observed orange and blue percentages do not align with the expected ratio of 71% orange and 29% blue, likely due to leftover liquid from the previous recipe altering the mixture.","```json
+{
+    ""orange_pct"": 65,
+    ""blue_pct"": 15,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages do not align with the expected ratio of 71% orange and 29% blue, likely due to leftover liquid from the previous recipe altering the mixture.""
+}
+```"
+2003-168,train_jitter_s2003,images/camera/s0168_p2_v1.jpg,N124,2,0.2857,0.7143,0,0,0.2857,0.7143,0.2,0.8,False,"The observed color leans towards a darker shade of greenish-blue, indicating a higher proportion of blue dye compared to the expected 29% orange and 71% blue mixture. This discrepancy suggests either leftover liquid altering the color or an inconsistency in the pouring process.","```json
+{
+    ""orange_pct"": 20,
+    ""blue_pct"": 80,
+    ""matches"": false,
+    ""reason"": ""The observed color leans towards a darker shade of greenish-blue, indicating a higher proportion of blue dye compared to the expected 29% orange and 71% blue mixture. This discrepancy suggests either leftover liquid altering the color or an inconsistency in the pouring process.""
+}
+```"
+2003-170,train_jitter_s2003,images/camera/s0170_p1_v1.jpg,11,1,0.4,0.5,1,1,0.4697,0.2652,0.25,0.5,True,"The observed color appears to align with the expected mixture of 40% orange and 50% blue, considering the initial pour sequence and the resulting shade.","```json
+{
+    ""orange_pct"": 25,
+    ""blue_pct"": 50,
+    ""matches"": true,
+    ""reason"": ""The observed color appears to align with the expected mixture of 40% orange and 50% blue, considering the initial pour sequence and the resulting shade.""
+}
+```"
+2003-265,train_jitter_s2003,images/camera/s0265_p1_v1.jpg,12,1,0.9091,0.0455,1,1,1.0,0.0,0.85,0.07,False,"The observed color leans more towards red-orange rather than the expected brownish hue, indicating a higher proportion of orange dye compared to blue, which might suggest an inconsistency in the mixing process.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 7,
+  ""matches"": false,
+  ""reason"": ""The observed color leans more towards red-orange rather than the expected brownish hue, indicating a higher proportion of orange dye compared to blue, which might suggest an inconsistency in the mixing process.""
+}
+```"
+2003-268,train_jitter_s2003,images/camera/s0268_p2_v1.jpg,N198,2,0.3051,0.4576,1,1,0.5955,0.4045,0.35,0.5,False,"The observed colors suggest a higher concentration of blue dye compared to the expected ratio, indicating a potential imbalance in the mixing process.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 50,
+    ""matches"": false,
+    ""reason"": ""The observed colors suggest a higher concentration of blue dye compared to the expected ratio, indicating a potential imbalance in the mixing process.""
+}
+```"
+2003-272,train_jitter_s2003,images/camera/s0272_p2_v1.jpg,11,2,0.16,0.8,0,0,0.1622,0.8111,0.12,0.88,False,"The observed color is predominantly blue with a significant amount of orange, indicating a mismatch where the blue dye exceeds expectations while the orange is less than expected.","```json
+{
+    ""orange_pct"": 12,
+    ""blue_pct"": 88,
+    ""matches"": false,
+    ""reason"": ""The observed color is predominantly blue with a significant amount of orange, indicating a mismatch where the blue dye exceeds expectations while the orange is less than expected.""
+}
+```"
+2003-273,train_jitter_s2003,images/camera/s0273_p1_v1.jpg,7,1,0.0,0.9091,0,0,0.0,0.9615,0.0,0.91,True,"The liquid appears to be predominantly blue with minimal orange, aligning with the expected composition of 0% orange and 91% blue after pouring the first part of recipe 7.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 91,
+    ""matches"": true,
+    ""reason"": ""The liquid appears to be predominantly blue with minimal orange, aligning with the expected composition of 0% orange and 91% blue after pouring the first part of recipe 7.""
+}
+```"
+2003-276,train_jitter_s2003,images/camera/s0276_p2_v1.jpg,N204,2,0.0,0.7,0,0,0.0,0.7,0.0,0.7,True,"The liquid appears to have a consistent blue hue with no visible orange or clear water separation, indicating the correct mixing ratio as per the recipe.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 70,
+    ""matches"": true,
+    ""reason"": ""The liquid appears to have a consistent blue hue with no visible orange or clear water separation, indicating the correct mixing ratio as per the recipe.""
+}
+```"
+2003-296,train_jitter_s2003,images/camera/s0296_p1_v1.jpg,6,1,0.4324,0.0,0,0,0.64,0.0,1.0,0.0,True,"The vial contains only orange dye, which aligns with the specified recipe of 10 mL of orange dye being poured first.","```json
+{
+  ""orange_pct"": 100,
+  ""blue_pct"": 0,
+  ""matches"": true,
+  ""reason"": ""The vial contains only orange dye, which aligns with the specified recipe of 10 mL of orange dye being poured first.""
+}
+```"
+2003-296,train_jitter_s2003,images/camera/s0296_p2_v1.jpg,6,2,0.25,0.0,0,0,0.25,0.0,0.1,0.0,True,"The vial contains 10 mL of orange dye, as per the recipe, with no blue dye added, resulting in a consistent orange hue without any unexpected color changes.","```json
+{
+    ""orange_pct"": 10,
+    ""blue_pct"": 0,
+    ""matches"": true,
+    ""reason"": ""The vial contains 10 mL of orange dye, as per the recipe, with no blue dye added, resulting in a consistent orange hue without any unexpected color changes.""
+}
+```"
+2003-315,train_jitter_s2003,images/camera/s0315_p2_v1.jpg,N235,2,0.4615,0.0,0,0,0.4615,0.0,0.3,0.0,True,"The vial contains only orange dye, which aligns with the specified recipe (30 mL orange, 0 mL blue). Since no blue dye was added during pouring, the final color is consistent with the expected 100% orange concentration.","```json
+{
+    ""orange_pct"": 30,
+    ""blue_pct"": 0,
+    ""matches"": true,
+    ""reason"": ""The vial contains only orange dye, which aligns with the specified recipe (30 mL orange, 0 mL blue). Since no blue dye was added during pouring, the final color is consistent with the expected 100% orange concentration.""
+}
+```"
+2003-324,train_jitter_s2003,images/camera/s0324_p1_v1.jpg,N241,1,0.856,0.0,0,0,0.8062,0.0,0.86,0.0,True,"The liquid appears predominantly orange with no visible blue, aligning with the expected composition after pouring 40 mL of orange dye first.","```json
+{
+    ""orange_pct"": 86,
+    ""blue_pct"": 0,
+    ""matches"": true,
+    ""reason"": ""The liquid appears predominantly orange with no visible blue, aligning with the expected composition after pouring 40 mL of orange dye first.""
+}
+```"
+2003-351,train_jitter_s2003,images/camera/s0351_p1_v1.jpg,7,1,0.0,0.9091,1,1,0.0,1.0,0.0,0.91,True,"The liquid appears to be predominantly blue with minimal orange, aligning with the expected composition of recipe 7 after pouring 50 mL of blue dye first.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 91,
+    ""matches"": true,
+    ""reason"": ""The liquid appears to be predominantly blue with minimal orange, aligning with the expected composition of recipe 7 after pouring 50 mL of blue dye first.""
+}
+```"
+2003-427,train_jitter_s2003,images/camera/s0427_p1_v1.jpg,N309,1,0.8727,0.1273,0,0,0.8481,0.1519,0.85,0.15,True,"The liquid appears predominantly orange with a small amount of blue, indicating a high concentration of orange dye and minimal blue, aligning closely with the expected ratio of 87% orange and 13% blue.","```json
+{
+    ""orange_pct"": 85,
+    ""blue_pct"": 15,
+    ""matches"": true,
+    ""reason"": ""The liquid appears predominantly orange with a small amount of blue, indicating a high concentration of orange dye and minimal blue, aligning closely with the expected ratio of 87% orange and 13% blue.""
+}
+```"
+2003-481,train_jitter_s2003,images/camera/s0481_p2_v1.jpg,11,2,0.16,0.8,1,1,0.2108,0.701,0.12,0.88,False,"The observed color is predominantly blue with a darker tint, suggesting a higher concentration of blue dye compared to the expected ratio. The orange dye appears minimal, contributing only 12%, while the blue dominates at 88%, indicating a significant deviation from the targeted composition of 16% orange and 80% blue.","```json
+{
+    ""orange_pct"": 12,
+    ""blue_pct"": 88,
+    ""matches"": false,
+    ""reason"": ""The observed color is predominantly blue with a darker tint, suggesting a higher concentration of blue dye compared to the expected ratio. The orange dye appears minimal, contributing only 12%, while the blue dominates at 88%, indicating a significant deviation from the targeted composition of 16% orange and 80% blue.""
+}
+```"
+2003-481,train_jitter_s2003,images/camera/s0481_p3_v1.jpg,11,3,0.1429,0.7143,1,1,0.1878,0.6245,0.12,0.82,False,"The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or volume.","```json
+{
+    ""orange_pct"": 12,
+    ""blue_pct"": 82,
+    ""matches"": false,
+    ""reason"": ""The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or volume.""
+}
+```"
+2003-532,train_jitter_s2003,images/camera/s0532_p1_v1.jpg,8,1,0.6316,0.1842,0,0,0.5172,0.2414,0.5,0.5,False,"The liquid appears uniformly red, which suggests an incorrect mixture of orange and blue dyes, likely due to improper pouring order or leftover liquid altering the ratio.","```json
+{
+  ""orange_pct"": 50,
+  ""blue_pct"": 50,
+  ""matches"": false,
+  ""reason"": ""The liquid appears uniformly red, which suggests an incorrect mixture of orange and blue dyes, likely due to improper pouring order or leftover liquid altering the ratio.""
+}
+```"
+2003-542,train_jitter_s2003,images/camera/s0542_p3_v1.jpg,5,3,0.3333,0.3333,1,1,0.4714,0.2278,0.32,0.32,True,"The observed color appears to align closely with the expected 33% orange and 33% blue mixture, suggesting proper filling according to the recipe.","```json
+{
+    ""orange_pct"": 32,
+    ""blue_pct"": 32,
+    ""matches"": true,
+    ""reason"": ""The observed color appears to align closely with the expected 33% orange and 33% blue mixture, suggesting proper filling according to the recipe.""
+}
+```"
+2003-545,train_jitter_s2003,images/camera/s0545_p2_v1.jpg,N398,2,0.3902,0.4878,0,0,0.4164,0.5204,0.2,0.5,True,"The vial contains 20 mL of orange dye, 25 mL of blue dye, and 25 mL of clear water, totaling 70 mL. After pouring these in order, the remaining volume would be 30 mL (assuming initial volume was sufficient). The expected concentration after mixing is approximately 28.6% orange and 57.1% blue, which aligns with the observed colors.","```json
+{
+    ""orange_pct"": 20,
+    ""blue_pct"": 50,
+    ""matches"": true,
+    ""reason"": ""The vial contains 20 mL of orange dye, 25 mL of blue dye, and 25 mL of clear water, totaling 70 mL. After pouring these in order, the remaining volume would be 30 mL (assuming initial volume was sufficient). The expected concentration after mixing is approximately 28.6% orange and 57.1% blue, which aligns with the observed colors.""
+}
+```"
+2003-559,train_jitter_s2003,images/camera/s0559_p2_v1.jpg,12,2,0.8,0.16,1,1,0.691,0.1149,0.8,0.1,True,"The observed color aligns closely with the expected ratio of 80% orange and 10% blue, indicating successful mixing according to the planned recipe.","```json
+{
+    ""orange_pct"": 80,
+    ""blue_pct"": 10,
+    ""matches"": true,
+    ""reason"": ""The observed color aligns closely with the expected ratio of 80% orange and 10% blue, indicating successful mixing according to the planned recipe.""
+}
+```"
+2003-601,train_jitter_s2003,images/camera/s0601_p2_v1.jpg,6,2,0.25,0.0,0,0,0.25,0.0,0.1,0.0,True,"The vial contains 10 mL of orange dye, as per the recipe, with no blue dye added, resulting in a clear appearance consistent with the expected 75% clear water content.","```json
+{
+    ""orange_pct"": 10,
+    ""blue_pct"": 0,
+    ""matches"": true,
+    ""reason"": ""The vial contains 10 mL of orange dye, as per the recipe, with no blue dye added, resulting in a clear appearance consistent with the expected 75% clear water content.""
+}
+```"
+2003-613,train_jitter_s2003,images/camera/s0613_p1_v1.jpg,9,1,0.7805,0.1707,1,1,0.5332,0.1273,0.75,0.15,False,"The liquid appears predominantly orange with a small amount of blue, indicating a higher concentration of orange than expected, which might be due to leftover liquid from a previous recipe.","```json
+{
+  ""orange_pct"": 75,
+  ""blue_pct"": 15,
+  ""matches"": false,
+  ""reason"": ""The liquid appears predominantly orange with a small amount of blue, indicating a higher concentration of orange than expected, which might be due to leftover liquid from a previous recipe.""
+}
+```"
+2003-613,train_jitter_s2003,images/camera/s0613_p3_v1.jpg,9,3,0.4375,0.4375,1,1,0.3382,0.3651,0.45,0.45,True,"The observed color appears to align closely with the expected 44% orange and 44% blue mixture, suggesting proper adherence to the pouring sequence and volume ratios.","```json
+{
+    ""orange_pct"": 45,
+    ""blue_pct"": 45,
+    ""matches"": true,
+    ""reason"": ""The observed color appears to align closely with the expected 44% orange and 44% blue mixture, suggesting proper adherence to the pouring sequence and volume ratios.""
+}
+```"
+2003-633,train_jitter_s2003,images/camera/s0633_p2_v1.jpg,N458,2,0.0,0.3333,1,1,0.3571,0.2381,0.0,0.33,True,"The vial contains 10 mL of blue dye and 20 mL of clear water, which aligns with the expected proportions for a 33% blue dye solution.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 33,
+    ""matches"": true,
+    ""reason"": ""The vial contains 10 mL of blue dye and 20 mL of clear water, which aligns with the expected proportions for a 33% blue dye solution.""
+}
+```"
+2003-661,train_jitter_s2003,images/camera/s0661_p2_v1.jpg,N475,2,0.0,0.4545,1,1,0.0636,0.4314,0.0,0.45,True,"The vial contains 25 mL of blue dye, which corresponds to 45% of the total volume, aligning with the expected ratio for recipe N475.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 45,
+    ""matches"": true,
+    ""reason"": ""The vial contains 25 mL of blue dye, which corresponds to 45% of the total volume, aligning with the expected ratio for recipe N475.""
+}
+```"
+2003-726,train_jitter_s2003,images/camera/s0726_p3_v1.jpg,11,3,0.1429,0.7143,0,1,0.1786,0.6786,0.12,0.8,False,"The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or volume.","```json
+{
+  ""orange_pct"": 12,
+  ""blue_pct"": 80,
+  ""matches"": false,
+  ""reason"": ""The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or volume.""
+}
+```"
+2003-729,train_jitter_s2003,images/camera/s0729_p2_v1.jpg,12,2,0.8,0.16,1,1,0.7513,0.2487,0.8,0.16,True,The observed color aligns closely with the expected 80% orange and 16% blue composition based on the pouring sequence and volume ratios.,"```json
+{
+    ""orange_pct"": 80,
+    ""blue_pct"": 16,
+    ""matches"": true,
+    ""reason"": ""The observed color aligns closely with the expected 80% orange and 16% blue composition based on the pouring sequence and volume ratios.""
+}
+```"
+2003-743,train_jitter_s2003,images/camera/s0743_p2_v1.jpg,N532,2,0.5833,0.4167,0,0,0.5833,0.4167,0.45,0.35,False,"The observed colors suggest a higher concentration of orange compared to blue, which may indicate an imbalance in the pouring sequence or leftover liquids altering the mixture.","```json
+{
+    ""orange_pct"": 45,
+    ""blue_pct"": 35,
+    ""matches"": false,
+    ""reason"": ""The observed colors suggest a higher concentration of orange compared to blue, which may indicate an imbalance in the pouring sequence or leftover liquids altering the mixture.""
+}
+```"
+2003-783,train_jitter_s2003,images/camera/s0783_p1_v1.jpg,7,1,0.0,0.9091,0,0,0.0,0.8883,0.0,0.91,True,"The vial contains only blue dye, which aligns with the expected composition for Recipe 7 after pouring 50 mL of blue dye.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 91,
+    ""matches"": true,
+    ""reason"": ""The vial contains only blue dye, which aligns with the expected composition for Recipe 7 after pouring 50 mL of blue dye.""
+}
+```"
+2003-787,train_jitter_s2003,images/camera/s0787_p1_v1.jpg,7,1,0.0,0.9091,0,0,0.0,0.9537,0.0,0.91,True,"The vial contains only blue dye, which aligns with the expected composition for Recipe 7 after pouring 50 mL of blue dye.","```json
+{
+    ""orange_pct"": 0,
+    ""blue_pct"": 91,
+    ""matches"": true,
+    ""reason"": ""The vial contains only blue dye, which aligns with the expected composition for Recipe 7 after pouring 50 mL of blue dye.""
+}
+```"
+2003-828,train_jitter_s2003,images/camera/s0828_p2_v1.jpg,N596,2,0.25,0.75,0,0,0.25,0.75,0.2,0.8,False,"The vial contains predominantly blue dye with only a small amount of orange, indicating a significant deviation from the expected 25% orange and 75% blue mixture.","```json
+{
+    ""orange_pct"": 20,
+    ""blue_pct"": 80,
+    ""matches"": false,
+    ""reason"": ""The vial contains predominantly blue dye with only a small amount of orange, indicating a significant deviation from the expected 25% orange and 75% blue mixture.""
+}
+```"
+2003-830,train_jitter_s2003,images/camera/s0830_p1_v1.jpg,12,1,0.9091,0.0455,0,0,0.9642,0.0179,0.85,0.07,False,"The observed color leans more towards red-orange rather than the expected brownish hue, indicating a significant deviation from the target color composition.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 7,
+  ""matches"": false,
+  ""reason"": ""The observed color leans more towards red-orange rather than the expected brownish hue, indicating a significant deviation from the target color composition.""
+}
+```"
+2003-848,train_jitter_s2003,images/camera/s0848_p2_v1.jpg,N609,2,0.3333,0.6667,0,0,0.3333,0.6667,0.2,0.8,False,"The observed color leans towards a darker shade, likely due to excess blue dye, which exceeds the expected proportion. The orange content appears insufficient compared to the required 33%, leading to an overall hue that is more blue-dominated than anticipated.","```json
+{
+    ""orange_pct"": 20,
+    ""blue_pct"": 80,
+    ""matches"": false,
+    ""reason"": ""The observed color leans towards a darker shade, likely due to excess blue dye, which exceeds the expected proportion. The orange content appears insufficient compared to the required 33%, leading to an overall hue that is more blue-dominated than anticipated.""
+}
+```"
+2003-902,train_jitter_s2003,images/camera/s0902_p3_v1.jpg,5,3,0.3333,0.3333,1,1,0.2389,0.4413,0.32,0.32,True,"The observed colors align closely with the expected 33% orange and 33% blue, considering slight variations due to mixing and residual effects from prior recipes.","```json
+{
+  ""orange_pct"": 32,
+  ""blue_pct"": 32,
+  ""matches"": true,
+  ""reason"": ""The observed colors align closely with the expected 33% orange and 33% blue, considering slight variations due to mixing and residual effects from prior recipes.""
+}
+```"
+2003-910,train_jitter_s2003,images/camera/s0910_p1_v1.jpg,8,1,0.6316,0.1842,1,1,0.5714,0.3673,0.5,0.5,False,"The liquid appears uniformly brownish, indicating equal mixing of orange and blue dyes, which does not align with the expected distribution of 63% orange and 18% blue after the first pour.","```json
+{
+  ""orange_pct"": 50,
+  ""blue_pct"": 50,
+  ""matches"": false,
+  ""reason"": ""The liquid appears uniformly brownish, indicating equal mixing of orange and blue dyes, which does not align with the expected distribution of 63% orange and 18% blue after the first pour.""
+}
+```"
+2003-928,train_jitter_s2003,images/camera/s0928_p2_v1.jpg,N667,2,0.6667,0.3333,1,1,0.6343,0.2296,0.65,0.25,False,"The observed orange and blue percentages do not align with the expected 67% orange and 33% blue mixture, likely due to leftover liquid altering the concentration.","```json
+{
+    ""orange_pct"": 65,
+    ""blue_pct"": 25,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages do not align with the expected 67% orange and 33% blue mixture, likely due to leftover liquid altering the concentration.""
+}
+```"
+2003-944,train_jitter_s2003,images/camera/s0944_p3_v1.jpg,11,3,0.1429,0.7143,1,1,0.1865,0.4235,0.12,0.82,False,"The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or quantities, leading to an incorrect color ratio.","```json
+{
+    ""orange_pct"": 12,
+    ""blue_pct"": 82,
+    ""matches"": false,
+    ""reason"": ""The observed colors are significantly different from the expected mixture. The vial contains predominantly blue dye with minimal orange, indicating a mismatch in the pouring sequence or quantities, leading to an incorrect color ratio.""
+}
+```"
+2003-989,train_jitter_s2003,images/camera/s0989_p1_v1.jpg,8,1,0.6316,0.1842,1,1,0.8286,0.0,0.5,0.5,False,"The liquid appears uniformly red, which suggests an incorrect mixture of orange and blue dyes, likely due to improper pouring or mixing.","```json
+{
+  ""orange_pct"": 50,
+  ""blue_pct"": 50,
+  ""matches"": false,
+  ""reason"": ""The liquid appears uniformly red, which suggests an incorrect mixture of orange and blue dyes, likely due to improper pouring or mixing.""
+}
+```"
+2003-989,train_jitter_s2003,images/camera/s0989_p3_v1.jpg,8,3,0.3333,0.3333,0,1,0.3452,0.2917,0.35,0.35,False,"The observed orange and blue percentages are higher than expected, likely due to leftover liquid from previous recipes altering the mixture.","```json
+{
+    ""orange_pct"": 35,
+    ""blue_pct"": 35,
+    ""matches"": false,
+    ""reason"": ""The observed orange and blue percentages are higher than expected, likely due to leftover liquid from previous recipes altering the mixture.""
+}
+```"
+2003-995,train_jitter_s2003,images/camera/s0995_p1_v1.jpg,13,1,0.9091,0.0909,1,1,0.5957,0.0,0.85,0.15,False,"The liquid appears predominantly orange with a slight blue tint, indicating a higher proportion of orange than expected, and the blue content is lower than anticipated.","```json
+{
+  ""orange_pct"": 85,
+  ""blue_pct"": 15,
+  ""matches"": false,
+  ""reason"": ""The liquid appears predominantly orange with a slight blue tint, indicating a higher proportion of orange than expected, and the blue content is lower than anticipated.""
+}
+```"
+2003-998,train_jitter_s2003,images/camera/s0998_p2_v1.jpg,12,2,0.8,0.16,1,1,0.6582,0.1617,0.8,0.16,True,"The observed color closely aligns with the expected 80% orange and 16% blue mixture, indicating successful filling according to the recipe.","```json
+{
+  ""orange_pct"": 80,
+  ""blue_pct"": 16,
+  ""matches"": true,
+  ""reason"": ""The observed color closely aligns with the expected 80% orange and 16% blue mixture, indicating successful filling according to the recipe.""
+}
+```"

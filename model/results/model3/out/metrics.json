@@ -1,0 +1,33 @@
+{
+  "info": {
+    "model": "nvidia/Cosmos-Reason1-7B",
+    "blind": false,
+    "pictures": 200,
+    "parsed": 200,
+    "minutes": 24.0,
+    "prompt": "The vial in the center, under the nozzle, is being filled with recipe {recipe_id}: {t200} mL orange, {t400} mL blue, {t100} mL clear, poured in that order.\nThis picture was taken after pour {stage} of {stages_total}.\nA correctly filled vial should now be about {exp_o}% orange dye, {exp_b}% blue dye and {exp_c}% clear water.\nLeftover liquid from the previous recipe can change the color.\n\nLook at the liquid's color. Estimate its actual orange and blue percentages, and say whether it matches what is expected.\nAnswer with only this JSON on one line:\n{{\"orange_pct\": <number>, \"blue_pct\": <number>, \"matches\": <true or false>, \"reason\": \"<one short sentence>\"}}",
+    "system": "You are a quality inspector at a liquid filling station. A fixed camera looks at a clear glass vial under a filling nozzle. The vial holds a mix of orange dye, blue dye and clear water. Mixed together, orange and blue make brown, olive or dark green shades depending on the amounts."
+  },
+  "gap_rule_0.08": {
+    "n": 200,
+    "positives": 100,
+    "precision": 0.4627,
+    "recall": 0.31,
+    "f1": 0.3713,
+    "false_alarm_rate": 0.36,
+    "roc_auc": 0.5143
+  },
+  "says_no_match": {
+    "n": 200,
+    "positives": 100,
+    "precision": 0.5377,
+    "recall": 0.57,
+    "f1": 0.5534,
+    "false_alarm_rate": 0.49,
+    "roc_auc": 0.54
+  },
+  "mix_error_mae": {
+    "orange": 0.1179,
+    "blue": 0.1082
+  }
+}

@@ -99,6 +99,19 @@ def assign_splits(vial_uids):
     return {u: ("test" if i < n_test else "train") for i, u in enumerate(uids)}
 
 
+def measure(img):
+    """The measured color columns for one BGR picture (twin render or real camera frame)."""
+    liq, panel = median_rgb(img, LIQ_ROI), median_rgb(img, PANEL_ROI)
+    h, s, v = cv2.cvtColor(np.uint8([[liq[::-1]]]), cv2.COLOR_BGR2HSV)[0, 0]
+    return dict(liq_r=liq[0], liq_g=liq[1], liq_b=liq[2],
+                panel_r=panel[0], panel_g=panel[1], panel_b=panel[2],
+                liqn_r=round(liq[0] / panel[0], 4), liqn_g=round(liq[1] / panel[1], 4),
+                liqn_b=round(liq[2] / panel[2], 4), liq_h=int(h), liq_s=int(s), liq_v=int(v),
+                **{f"band{k}_{c}": round(val / p, 4)
+                   for k, (y0, y1) in enumerate(BANDS)
+                   for c, val, p in zip("rgb", median_rgb(img, (BAND_X[0], y0, BAND_X[1], y1)), panel)})
+
+
 def table_rows(run_dir):
     run_dir = Path(run_dir)
     seed = json.loads((run_dir / "run_info.json").read_text())["args"]["seed"]
@@ -108,8 +121,6 @@ def table_rows(run_dir):
         if img is None:
             print(f"  skipped (unreadable): {row['image']}", file=sys.stderr)
             continue
-        liq, panel = median_rgb(img, LIQ_ROI), median_rgb(img, PANEL_ROI)
-        h, s, v = cv2.cvtColor(np.uint8([[liq[::-1]]]), cv2.COLOR_BGR2HSV)[0, 0]
         exp_o, exp_b = expected_shares(row)
         act_o, act_b = float(row["orange_frac"]), float(row["blue_frac"])
         nom_o, nom_b = clean_vial_shares(row, NOMINAL_RESIDUE_ML)
@@ -120,13 +131,7 @@ def table_rows(run_dir):
                                         "stage", "stage_tank", "stages_total", "carryover"]})
         out.update(expected_orange=round(exp_o, 4), expected_blue=round(exp_b, 4),
                    expected_clean_orange=round(nom_o, 4), expected_clean_blue=round(nom_b, 4),
-                   liq_r=liq[0], liq_g=liq[1], liq_b=liq[2],
-                   panel_r=panel[0], panel_g=panel[1], panel_b=panel[2],
-                   liqn_r=round(liq[0] / panel[0], 4), liqn_g=round(liq[1] / panel[1], 4),
-                   liqn_b=round(liq[2] / panel[2], 4), liq_h=int(h), liq_s=int(s), liq_v=int(v),
-                   **{f"band{k}_{c}": round(val / p, 4)
-                      for k, (y0, y1) in enumerate(BANDS)
-                      for c, val, p in zip("rgb", median_rgb(img, (BAND_X[0], y0, BAND_X[1], y1)), panel)},
+                   **measure(img),
                    actual_orange=round(act_o, 4), actual_blue=round(act_b, 4),
                    off_spec=int(points > OFF_SPEC_POINTS), off_spec_points=round(points, 4))
         yield out

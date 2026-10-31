@@ -15,18 +15,35 @@ A camera-only add-on for older filling machines. After each pour, it checks whet
 3. **Estimate the mix, then compare.** A model estimates the orange and blue shares in the vial from the colors. If the estimate is far from what a clean vial of that recipe should have at that pour, it **flags it**. For example: *"pour 1: about 66% orange, a clean vial would be 92%"*.
 4. **On the real line** (planned), a pour-stop detector takes the snapshot after each pour. A short calibration period with a few clean vials per recipe lines the model up with the real camera.
 
+## What it needs on a real line (assumptions)
+
+The image model reads the mix from the camera alone. To say whether that mix is *wrong*, the program also needs to know what each vial should be. These inputs were not confirmed with CSI and are **assumed** to arrive as follows:
+
+| Input | Assumed format | Real-world source | Set up |
+|---|---|---|---|
+| **Vial camera** | 640×480 video of the fill position, the same view as CSI's `vial_fill` camera | A camera on the fill station | Once |
+| **Recipe queue:** which recipe each vial gets, in order | CSV rows of `vial, recipe_id, t100_ml, t200_ml, t400_ml, dispense_order`, the same columns as CSI's `video5_vial_recipes.csv` | The operator, the production schedule or an MES export | Per batch |
+| **Tank assignment:** which tank holds which color | `T100` = clear (diluent), `T200` = orange, `T400` = blue, `T300` = out of service; kept in `twin_tools/recipe_rules.json` | Set at install | Once |
+| **Calibration period** | A few clean vials per recipe at startup | Normal production | At startup |
+
+- **No connection to the machine's controls (PLC) is needed:** one camera, the recipe queue and the tank assignment.
+- **A tank camera is not needed.** It is an optional upgrade: it could warn about low or empty tanks, catch a tank refilled with the wrong dye, and recalibrate the expected colors automatically. The digital twin doesn't model the tanks, so this is future work.
+- **These inputs don't change the models.** The twin data was generated with this tank assignment and recipe format, and the image-only model doesn't take the recipe as an input; the recipe is only used to compute what the color should be.
+
 ## The models
 
-Both models answer the same question, *"is the mix wrong for this pour?"*, and use the same flag rule: estimate the orange and blue shares, then compare them with what a clean vial of that recipe should have at that pour. They differ in **how they look at the picture**.
+All three models answer the same question, *"is the mix wrong for this pour?"*, with the same flag rule: estimate the orange and blue shares, then compare them with what a clean vial of that recipe should have at that pour. They differ in **how they look at the picture**.
 
-| | **Model 1: color model** | **Model 2: image network (CNN)** |
-|---|---|---|
-| What it sees | About 40 hand-picked measurements: the average color of 8 strips down the vial, a bottom patch, and the white panel | The whole vial crop (140×320 pixels) |
-| What decides what matters | The chosen measurements: anything not measured can't be used | The network learns its own features (color, liquid height, shading, edges) |
-| Model | Gradient boosting on a table (scikit-learn) | ResNet-18, pre-trained on everyday photos (ImageNet), then trained on the twin vials |
-| Handling color differences | Trained on runs with random dye shades | The same, plus fresh random shades and vial shifts on every training pass |
-| Runs on | A laptop, about 1 minute | A GPU (YAAD DGX Spark), about 1–2 hours |
-| Explainable | Yes: the measured colors are visible | Less so, but it still outputs "estimated 66% orange vs 92% expected" |
+| | **Model 1: color model** | **Model 2: image network (CNN)** | **Model 3: Cosmos Reason** |
+|---|---|---|---|
+| What it sees | About 40 hand-picked measurements: the average color of 8 strips down the vial, a bottom patch, and the white panel | The whole vial crop (140×320 pixels) | The whole picture plus a text prompt |
+| What decides what matters | The chosen measurements: anything not measured can't be used | The network learns its own features (color, liquid height, shading, edges) | A general vision-language model; no training on vials |
+| Model | Gradient boosting on a table (scikit-learn) | ResNet-18, pre-trained on everyday photos (ImageNet), then trained on the twin vials | NVIDIA Cosmos-Reason1-7B, used as is |
+| Handling color differences | Trained on runs with random dye shades | The same, plus fresh random shades and vial shifts on every training pass | — |
+| Runs on | A laptop, about 1 minute | A GPU (YAAD DGX Spark), about 7 minutes of training | A GPU, about 6 seconds per picture |
+| Explainable | Yes: the measured colors are visible | Less so, but it still outputs "estimated 66% orange vs 92% expected" | Writes a reason in plain words |
+
+Model 2 was trained in two versions: **image + recipe** (the recipe as an extra input) and **image only**. Model 3 was tested with two prompts: **with the recipe and expected mix**, and **blind** (only "estimate the orange and blue percentages").
 
 **How they're built:**
 1. Twin pictures are turned into a table (`build_table.py`). The 4,000 vials are split 80/20 **by vial**, so every pour of a vial is on the same side.
@@ -58,6 +75,18 @@ Both models trained on all 4 runs (4,000 vials, 8,904 pictures; 3 of the runs ha
 | Model 1, all runs, gradient boosting | 0.87 | 0.84 |
 | **Model 2, all runs** | **0.90** | **0.90** |
 
+**All three models on the same 200 twin test pictures** (100 off-spec, 100 fine; a fixed sample, because model 3 takes seconds per picture):
+
+| Model | AUC | F1 | Recall | False alarms | Mix estimate error (orange / blue) |
+|---|---|---|---|---|---|
+| **Model 2: image only** | **0.89** | 0.76 | 0.69 | **0.12** | **2.6 / 2.1 points** (all 800 test vials) |
+| Model 2: image + recipe | 0.88 | **0.80** | **0.80** | 0.19 | 2.5 / 2.1 points (all 800 test vials) |
+| Model 1: gradient boosting | 0.88 | 0.78 | 0.79 | 0.23 | — |
+| Model 1: mix estimate + rule | 0.85 | 0.77 | 0.74 | 0.19 | 4.3 / 3.5 points (all 800 test vials) |
+| Model 3: Cosmos, recipe in prompt | 0.51 | 0.37 | 0.31 | 0.36 | 11.8 / 10.8 points |
+| Model 3: Cosmos, its own yes/no answer | 0.54 | 0.55 | 0.57 | 0.49 | — |
+| Model 3: Cosmos, blind prompt | 0.52 | 0.66 | 0.98 | 0.98 | 21.5 / 23.1 points |
+
 **Pours 2+ only** (pour 1 left to the end check):
 
 | Model | Clean vials falsely flagged | Carryover vials caught |
@@ -66,13 +95,15 @@ Both models trained on all 4 runs (4,000 vials, 8,904 pictures; 3 of the runs ha
 | Model 1, mix estimate + rule | 54 of 386 (14%) | 223 of 323 (69%) |
 
 - **Model 2 is the best so far:** the most accurate mix estimate, the highest AUC, and almost no loss under color shifts. It trains in about 7 minutes on one GPU.
+- **Model 2 image only is as good as image + recipe** (AUC 0.897 vs 0.898 and the same mix error on all 800 test vials). The network reads the mix from the picture alone; the recipe is only needed to say what the color should be. Their different recall and false alarms come from the threshold each picked (10 vs 8 points), a trade-off between catching more and interrupting less.
+- **Model 3 (Cosmos Reason) doesn't work for this task, used as is.** With the recipe in the prompt, its estimates follow the expected mix it was given rather than the picture (closer to the prompt than to the truth), so its flags are at chance. Blind, it gives only 9 different answers for 200 pictures (for example 30% orange / 20% blue for 75 of them), and its blue estimate has zero correlation with the truth. Its written descriptions of the color are reasonable, so it could still help turn model 2's numbers into a plain-language alert. The newer Cosmos-Reason2 requires a Hugging Face token and license acceptance and was not tested.
 - **Training on random dye shades made both models more robust to color differences.** Caveat: the robustness test shifts colors the same way model 2's training augmentation does, so its flat result partly reflects what it practiced. Real video is the true test.
 - **Checking after every pour catches more carryover** than checking only the finished vial (336 vs 222 of 377), at the cost of more false alarms.
 - **Most false alarms come from pour 1,** where the unknown leftover amount blurs what "clean" looks like (40% of clean first pours are flagged by model 2). Skipping pour-1 alarms gives the best balance. Knowing the station's real leftover volume would cut them further.
 - The recipe alone can't predict the answer (AUC 0.54), so the twin data doesn't leak it.
 - Model 1's results were independently re-checked three times by separate AI reviewers (see "AI assistance").
 
-Full metrics: `model/results/model2/` (model 2), `model/results/model1_all/` (model 1, all runs) and `model/results/model1/` (model 1, run 1 only). Model 2's weights (`model.pt`, 43 MB) are not in git.
+Full metrics: `model/results/model2/` and `model2_norecipe/` (model 2), `model/results/model1_all/` and `model1/` (model 1), `model/results/model3/` and `model3_blind/` (model 3, with every answer in `answers.csv`). Model 2's weights (`model.pt`, 43 MB) are not in git.
 
 ## Known limits
 
@@ -99,14 +130,17 @@ python model/build_table.py twin_runs/<run>/out
 # 4. Model 1 (+ robustness test) -> model/results/model1/
 python model/train_color_model.py model/tables/<run>.csv
 
-# 5. Model 2 (GPU) -> model/results/model2/
+# 5. Model 2 (GPU) -> model/results/model2/   (add --no-recipe for the image-only version)
 python model/train_cnn.py --table model/tables/<run>.csv --pretrained
+
+# 6. Model 3, Cosmos Reason (GPU; pip install transformers accelerate) -> model/results/model3/
+python model/run_cosmos.py --table model/tables/<run>.csv --limit 200          # add --blind for the blind prompt
 ```
 
 | Folder | Contents |
 |---|---|
 | `twin_tools/` | `render_dataset.py` (twin picture generator), `recipe_rules.json` (recipe rules + the 10 real recipes) |
-| `model/` | `build_table.py`, `train_color_model.py`, `train_cnn.py`; `tables/` and `results/` |
+| `model/` | `build_table.py`, `train_color_model.py`, `train_cnn.py`, `run_cosmos.py`; `tables/` and `results/` |
 | `samples/` | 24 example twin pictures; `samples.csv` lists recipe, pour and carryover for each |
 | `docs/DATASET_GENERATION.md` | How the twin data is made, every label column, and which columns may be model inputs |
 | `PROCESS.md` | Plan and status |
@@ -121,7 +155,7 @@ python model/train_cnn.py --table model/tables/<run>.csv --pretrained
 
 - **Data, digital twin and line:** Rockwell Automation, NVIDIA, UWM Connected Systems Institute (CSI), MSOE AI Club.
 - **Compute:** YAAD DGX Spark cluster.
-- **Tools and models:** NVIDIA Isaac Sim 5.1 and Omniverse Replicator; NVIDIA PyTorch container; ResNet-18 (torchvision, ImageNet weights); scikit-learn, OpenCV, pandas, NumPy.
+- **Tools and models:** NVIDIA Isaac Sim 5.1 and Omniverse Replicator; NVIDIA PyTorch container; ResNet-18 (torchvision, ImageNet weights); NVIDIA Cosmos-Reason1-7B (Hugging Face transformers); scikit-learn, OpenCV, pandas, NumPy.
 
 ### AI assistance
 

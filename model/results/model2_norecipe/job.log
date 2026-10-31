@@ -1,0 +1,56 @@
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+device cuda, torch 2.9.0a0+145a3a7bda.nv25.10
+8904 pictures: fit 6055, val 1035, test 1814
+  loaded 1000/8904 pictures
+  loaded 2000/8904 pictures
+  loaded 3000/8904 pictures
+  loaded 4000/8904 pictures
+  loaded 5000/8904 pictures
+  loaded 6000/8904 pictures
+  loaded 7000/8904 pictures
+  loaded 8000/8904 pictures
+loaded pictures in 20 s; vial masks found for 100%
+Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /root/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+  0%|          | 0.00/44.7M [00:00<?, ?B/s] 23%|██▎       | 10.1M/44.7M [00:00<00:00, 106MB/s] 48%|████▊     | 21.5M/44.7M [00:00<00:00, 113MB/s] 73%|███████▎  | 32.8M/44.7M [00:00<00:00, 115MB/s] 99%|█████████▊| 44.0M/44.7M [00:00<00:00, 116MB/s]100%|██████████| 44.7M/44.7M [00:00<00:00, 115MB/s]
+epoch 1/25: train L1 0.0591, val MAE 0.0495 (36 s)
+epoch 2/25: train L1 0.0444, val MAE 0.0398 (51 s)
+epoch 3/25: train L1 0.0409, val MAE 0.0376 (65 s)
+epoch 4/25: train L1 0.0389, val MAE 0.0390 (80 s)
+epoch 5/25: train L1 0.0363, val MAE 0.0311 (94 s)
+epoch 6/25: train L1 0.0348, val MAE 0.0329 (108 s)
+epoch 7/25: train L1 0.0334, val MAE 0.0356 (122 s)
+epoch 8/25: train L1 0.0334, val MAE 0.0320 (136 s)
+epoch 9/25: train L1 0.0315, val MAE 0.0336 (150 s)
+epoch 10/25: train L1 0.0296, val MAE 0.0307 (164 s)
+epoch 11/25: train L1 0.0297, val MAE 0.0309 (179 s)
+epoch 12/25: train L1 0.0280, val MAE 0.0338 (194 s)
+epoch 13/25: train L1 0.0280, val MAE 0.0277 (209 s)
+epoch 14/25: train L1 0.0269, val MAE 0.0284 (223 s)
+epoch 15/25: train L1 0.0259, val MAE 0.0284 (238 s)
+epoch 16/25: train L1 0.0248, val MAE 0.0262 (253 s)
+epoch 17/25: train L1 0.0240, val MAE 0.0263 (267 s)
+epoch 18/25: train L1 0.0234, val MAE 0.0274 (281 s)
+epoch 19/25: train L1 0.0228, val MAE 0.0271 (295 s)
+epoch 20/25: train L1 0.0225, val MAE 0.0260 (310 s)
+epoch 21/25: train L1 0.0215, val MAE 0.0252 (323 s)
+epoch 22/25: train L1 0.0209, val MAE 0.0258 (338 s)
+epoch 23/25: train L1 0.0204, val MAE 0.0249 (352 s)
+epoch 24/25: train L1 0.0201, val MAE 0.0247 (367 s)
+epoch 25/25: train L1 0.0202, val MAE 0.0246 (381 s)
+
+model 2 (CNN mix + rule): AUC 0.8973, F1 0.768, recall 0.7493, false alarms 0.1323, threshold 0.10
+mix error (MAE): {'orange': 0.0255, 'blue': 0.0211}
+vials: {'vials': 800, 'off_spec_vials_caught': '300 of 349', 'carryover_vials_caught': '316 of 377', 'clean_vials_falsely_flagged': '117 of 423'}
+robustness (AUC / F1 / false alarms):
+  none                       0.897  0.768  0.132
+  liquid green x0.9          0.897  0.770  0.133
+  liquid green x1.1          0.895  0.774  0.130
+  liquid red x0.9            0.897  0.766  0.133
+  liquid red x1.1            0.898  0.769  0.135
+  liquid blue x0.9           0.897  0.769  0.130
+  liquid blue x1.1           0.897  0.768  0.133
+  liquid darker x0.85        0.898  0.771  0.127
+  liquid lighter x1.15       0.896  0.767  0.131
+  camera darker x0.85        0.896  0.770  0.131
+  camera warmer r1.1 b0.9    0.897  0.772  0.130
+wrote /job/out

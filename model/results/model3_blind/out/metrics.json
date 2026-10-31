@@ -1,0 +1,24 @@
+{
+  "info": {
+    "model": "nvidia/Cosmos-Reason1-7B",
+    "blind": true,
+    "pictures": 200,
+    "parsed": 200,
+    "minutes": 27.8,
+    "prompt": "The vial in the center, under the nozzle, holds a mix of orange dye, blue dye and clear water.\nLook only at the liquid's color. Estimate what percentage of the liquid is orange dye and what percentage is blue dye\n(the rest is clear water).\nAnswer with only this JSON on one line:\n{\"orange_pct\": <number>, \"blue_pct\": <number>, \"reason\": \"<one short sentence describing the color>\"}",
+    "system": "You are a quality inspector at a liquid filling station. A fixed camera looks at a clear glass vial under a filling nozzle. The vial holds a mix of orange dye, blue dye and clear water. Mixed together, orange and blue make brown, olive or dark green shades depending on the amounts."
+  },
+  "gap_rule_0.08": {
+    "n": 200,
+    "positives": 100,
+    "precision": 0.5,
+    "recall": 0.98,
+    "f1": 0.6622,
+    "false_alarm_rate": 0.98,
+    "roc_auc": 0.5206
+  },
+  "mix_error_mae": {
+    "orange": 0.2148,
+    "blue": 0.2312
+  }
+}
