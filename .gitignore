@@ -9,3 +9,6 @@ __pycache__/
 model/results/cnn_smoke_test*/
 .venv/
 model/results/cosmos_smoke_test/
+# Dashboard runs, uploaded videos and other one-off checks
+model/results/live_*/
+model/results/check_*/

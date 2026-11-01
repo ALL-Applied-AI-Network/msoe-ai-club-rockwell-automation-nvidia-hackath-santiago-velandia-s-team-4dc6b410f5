@@ -1,32 +1,35 @@
-"""Generate labeled training pictures from the fill-station digital twin: one picture after each pour.
+"""Make labeled training pictures with the fill-station digital twin: one picture after each pour.
 
-    # Plan only (no Isaac Sim; runs on a laptop). Checks recipes against the rules and writes labels.csv:
-    python3 twin_tools/render_dataset.py --dry-run --count 20 --out-dir dataset_plan   (from version_1/)
+    # Plan only (no Isaac Sim; runs on a laptop): picks the recipes, checks them against the rules and writes
+    # labels.csv, so the plan can be checked before rendering:
+    python3 twin_tools/render_dataset.py --dry-run --count 20 --out-dir dataset_plan        (from version_1/)
 
-    # Render (Isaac Sim 5.1 on YAAD): upload this file + recipe_rules.json into the workspace twin's tools/,
+    # Render (Isaac Sim 5.1, e.g. on YAAD): put this file and recipe_rules.json in the twin's tools/ folder,
     # then from the twin folder:
-    /isaac-sim/python.sh tools/render_dataset.py --twin /job/in --count 20 --variations 1 --out-dir /job/out
-    # -> out/images/clean/*.png, out/images/camera/*.jpg, out/masks/*.png, out/labels.csv (one row per picture)
+    /isaac-sim/python.sh tools/render_dataset.py --twin /job/in --count 1000 --variations 1 --seed 2001 \
+        --styles camera --dye-jitter 0.2 --pos-jitter 4 --out-dir /job/out
+    # -> out/images/<style>/*.jpg|png, out/masks/*.png, out/labels.csv (one row per picture), out/run_info.json
 
-What one "sample" is: one vial. It gets a recipe (real 5-14, or a random new one that passes
-tools/recipe_rules.json) and a previous vial. Every vial starts with `residue_ml` of the previous
-vial's mix (the shared mixing path the organizers describe), and the same amount of its own mix stays
-behind in the path (taken proportionally from every pour), so the total matches the recipe. The leftover is
-capped at --max-residue-share of the vial. If the previous vial was the same recipe the sample is clean
-(the finished vial matches the recipe, but early-pour pictures are a blend, like real vial 11); if it was
-a different recipe the sample is a carryover sample.
-Each vial variation gets one lighting setting and one camera look, shared by all its pours (--light-mode
-random for training; neutral/dim/bright/warm/cool fixed). The camera never moves. Every render is saved
-TWICE (--styles): "clean" (straight from Isaac Sim, lossless PNG, like fillcam_frame686.png) and "camera"
-(the same picture with the real-camera look), so the model sees both kinds of rendering.
-The liquid surface is always the settled finished-vial shape scaled to the mL so far (no splashing tops),
-and the liquid material keeps the organizers' opacity 0.6 (--opacity-mode fixed).
-For each pour (dispense order T200 -> T400 -> T100) the script sets the liquid height for the mL so far,
-sets the liquid color for the mix so far, hides the pouring stream, renders FillCam, makes the image look
-like the real camera, measures the white panel's color, and writes one row to labels.csv.
+One "sample" is one vial:
+  - It gets a recipe: one of CSI's real recipes 5-14, or a random new one that follows recipe_rules.json.
+  - It also gets a previous vial. The station has a shared mixing path, so every vial starts with some leftover
+    (residue_ml, random 5-30 mL) of the previous vial's mix, and the same amount of its own mix stays behind
+    for the next vial (taken evenly from every pour, so the total still matches the recipe).
+  - If the previous vial was the same recipe, the vial is clean: the finished vial matches the recipe (early
+    pours are a blend, as on the real line). If it was a different recipe, the vial has carryover.
+  - The pours go in CSI's order (T200 orange, then T400 blue, then T100 clear). After each pour the script sets
+    the liquid height for the mL so far and the liquid color for the mix so far, hides the pouring stream,
+    renders the fill camera (FillCam), and writes one row to labels.csv.
 
-Nothing in the twin files is changed: all edits go to the session layer (in memory) and are never saved.
-APPROXIMATE (calibrate before trusting): liquid colors, opacity, residue volume.
+Variety, so the model doesn't learn one exact look (each vial gets its own; all its pours share it):
+  - Lighting: random brightness (x0.6-1.4) and warm/cool tint (--light-mode random), or one fixed setting.
+  - Camera look ("camera" style): darker exposure, slight blur, noise and a timestamp like the real camera.
+    The "clean" style saves the render as it comes out of Isaac Sim.
+  - Dye shade (--dye-jitter) and vial position (--pos-jitter, whole picture shifted a few pixels).
+The liquid surface is always flat and settled, and the liquid keeps the organizers' opacity (0.6).
+
+Nothing in the twin files is changed: all edits stay in memory and are never saved.
+APPROXIMATE (not measured on the real line): liquid colors, opacity, leftover volume.
 """
 import argparse
 import csv
@@ -50,7 +53,7 @@ FULL_ML = 70.0          # the twin's animation is recipe 7: 70 mL at frame 686
 FIRST_FRAME, LAST_FRAME = 21, 686   # liquid is visible from frame 21
 
 # Liquid color model (APPROXIMATE). Dye absorption fitted to the 20 clean real vials of video 5
-# (changeover-watch, Beer-Lambert). The twin material uses diffuse = BRIGHTNESS * exp(-(o*A_ORANGE + b*A_BLUE)),
+# (Beer-Lambert law). The twin material uses diffuse = BRIGHTNESS * exp(-(o*A_ORANGE + b*A_BLUE)),
 # where o, b are the orange and blue fractions. BRIGHTNESS matches the green channel of the organizers'
 # blue for recipe 7 (diffuseColor 0.006, 0.2, 0.3).
 A_ORANGE = (0.0, 4.503, 7.878)
@@ -134,7 +137,7 @@ def stages(cur, prev, residue_ml, rules):
     'residual liquid from the previous recipe's mixture'): residue_ml of the previous vial's mix comes out
     first, and the same amount of THIS recipe's mix stays behind, taken proportionally from every pour.
     So a clean vial ends exactly at its recipe, no dye is lost, and a carryover vial ends as
-    (residue/total) old mix + the rest new recipe, the same model the changeover-watch explainer fits."""
+    (residue/total) old mix + the rest new recipe."""
     order = [t for t in rules["dispense_order"] if cur[t] > 0]
     keep = 1.0 - residue_ml / sum(cur[t] for t in TANKS)
     deliver = {t: cur[t] * keep for t in order}
@@ -177,15 +180,15 @@ def liquid_color(orange_frac, blue_frac, opacity_mode="fixed", dye=None):
                for ao, ab, ko, kb in zip(A_ORANGE, A_BLUE, so, sb)]
     if opacity_mode == "fixed":                    # same as the organizers' material (clean look)
         opacity = ORGANIZERS_OPACITY
-    else:                                          # "by-dye": paler mixes more see-through (earlier versions)
+    else:                                          # "by-dye": paler mixes more see-through (not used)
         opacity = 0.15 + 0.45 * min(1.0, (orange_frac + blue_frac) / (50 / 70))
     return diffuse, opacity
 
 
 # ----------------------------------------------------------------------------------------------
 # Fill height: calm surface. Every picture uses the SETTLED finished-vial shape (frame 686, 70 mL) and
-# scales it vertically to the mL so far, keeping the bottom in place. (Earlier versions borrowed
-# mid-pour animation frames, whose surface was still splashing: the "foamy tops".)
+# scales it vertically to the mL so far, keeping the bottom in place (mid-pour animation frames have a
+# splashing surface).
 # ----------------------------------------------------------------------------------------------
 def liquid_bottom(stage):
     z = [p[2] for p in stage.GetPrimAtPath(LIQUID_MESH).GetAttribute("points").Get(LAST_FRAME)]
@@ -210,7 +213,7 @@ def vial_conditions(args, sample_id, v):
             "_light_mults": mults, "exposure_gamma": round(rng.uniform(1.1, 1.5), 3),
             "exposure_gain": round(rng.uniform(0.75, 1.0), 3), "noise_sigma": round(rng.uniform(1.5, 4.0), 2),
             "blur": int(rng.random() < 0.5)}
-    # Dye shade and vial position: own random stream, so runs without them match earlier runs exactly.
+    # Dye shade and vial position: their own random stream, so turning them on doesn't change the other settings.
     rng2 = random.Random(f"{args.seed}-s{sample_id}-v{v}-dye-pos")
     j = args.dye_jitter                        # each dye's absorption per channel x U(1-j, 1+j); brightness x U(1-j/2, 1+j/2)
     so = tuple(round(rng2.uniform(1 - j, 1 + j), 3) for _ in range(3))
@@ -499,7 +502,7 @@ def main():
     ap.add_argument("--styles", default="clean,camera",
                     help="which renderings to save per picture: clean (like fillcam_frame686.png), camera, or both")
     ap.add_argument("--opacity-mode", choices=["fixed", "by-dye"], default="fixed",
-                    help="fixed = organizers' 0.6 (clean look); by-dye = paler mixes more see-through (old)")
+                    help="fixed = organizers' 0.6 (clean look); by-dye = paler mixes more see-through (not used)")
     ap.add_argument("--dye-jitter", type=float, default=0.0,
                     help="random dye shade per vial: absorption x U(1-j, 1+j) per channel (e.g. 0.2); 0 = off")
     ap.add_argument("--pos-jitter", type=int, default=0,

@@ -1,27 +1,28 @@
-"""Model 2: an image network (ResNet-18) looks at the vial crop + the recipe -> estimates the orange and blue
-shares, then the same flag rule as model 1's mix_rule (estimate vs expected_clean_*, threshold).
+"""Train and test the vial color model on digital-twin pictures.
 
-    # GPU (YAAD, NVIDIA PyTorch container), from version_1/:
-    python model/train_cnn.py --table model/tables/train_all.csv \
-        --run train_camera_s1001=twin_runs/train_camera_s1001/out --run train_jitter_s2001=... --pretrained
-    # image only, no recipe inputs (for real video without recipe labels): add --no-recipe
-    # quick smoke test (CPU, a few vials, no torch download):
-    python model/train_cnn.py --table model/tables/train_camera_s1001.csv --limit-vials 40 --epochs 1
-    # -> model/results/model2/metrics.json, test_predictions.csv, model.pt
+What the model does: it looks at a picture of the vial (taken after a pour) together with the recipe, and
+estimates how much of the liquid is orange dye and how much is blue dye. A simple rule then compares that
+estimate with what a correct vial of the recipe should look like after that pour, and raises an alert when the
+difference is bigger than a threshold (picked here, on held-out twin vials).
 
-Needs torch, torchvision, numpy, Pillow (in the NVIDIA PyTorch container) and pandas (not included in
-nvcr.io/nvidia/pytorch:25.10-py3: run `pip install pandas` first in the job command).
-Uses the same table (build_table.py) for the split, recipe inputs and labels; images are read from each run
-folder (--run NAME=DIR; default DIR = twin_runs/NAME/out). Inputs follow the leakage rule: the picture, the
-recipe columns and expected_* only. Split: the table's train/test (by vial); 15% of the train vials are held out
-as validation to pick the best epoch and the flag threshold. Test vials are scored once.
+    # On a GPU (YAAD, NVIDIA PyTorch container nvcr.io/nvidia/pytorch:25.10-py3), from version_1/:
+    pip install pandas                     # not included in that container
+    python model/train_model.py --table model/tables/train_all.csv --pretrained \
+        --run train_camera_s1001=<folder of that twin run> --run ...     # one --run per twin run in the table
+    # -> model/results/twin_test/: model.pt (the trained model, not in git), metrics.json, test_predictions.csv
+    # Quick check on a laptop (a few vials, 1 epoch): add --limit-vials 40 --epochs 1 --device cpu
 
-Preprocessing (same at runtime on real frames): crop around the vial, divide by the white panel's median
-color (cancels exposure and white balance, like model 1's liqn_*).
-Training augmentation: random crop offset (vial stop position, +-6 px) and a random shade per color channel on
-the vial pixels only (x U(1-a, 1+a), --shade-aug), so the network can't rely on one exact twin dye shade.
-The vial pixels come from the twin's mask (training only; not needed at runtime).
-Robustness test: the same color shifts as train_color_model.py, applied to the test pictures.
+Data: the table from build_table.py says which pictures are for training and which for testing (split by vial,
+so all pictures of one vial are on the same side). 15% of the training vials are held back to pick the best
+training round and the alert threshold. The test vials are used once, at the end.
+
+Inputs: the picture and what the line knows from the recipe (see RECIPE_COLS). Never the answers.
+Picture preparation (the same on real camera frames): cut out the area around the vial and divide every pixel
+by the color of the white panel next to it, so darker or warmer lighting cancels out.
+During training only, each picture gets a random shift of up to 6 pixels (the vial stops in a slightly
+different spot) and a random liquid shade (each color channel of the vial pixels x 0.85-1.15), so the model
+can't depend on the twin's exact dye colors. The vial pixels come from the twin's masks (training only).
+Color-shift test: the test pictures are scored again with the liquid or the whole picture recolored (SHIFTS).
 """
 import argparse
 import json
@@ -44,7 +45,7 @@ RECIPE_COLS = ["expected_clean_orange", "expected_clean_blue", "expected_orange"
                "stage", "stages_total", "t200_ml", "t400_ml", "t100_ml", "total_ml"]
 RECIPE_SCALE = [1, 1, 1, 1, 3, 3, 80, 80, 80, 80]
 TARGETS = ["actual_orange", "actual_blue"]
-# same shifts as train_color_model.SHIFTS: (name, (r, g, b) gains, liquid only?)
+# color-shift test: (name, (r, g, b) gains, liquid only?)
 SHIFTS = [("none", (1, 1, 1), True),
           ("liquid green x0.9", (1, 0.9, 1), True), ("liquid green x1.1", (1, 1.1, 1), True),
           ("liquid red x0.9", (0.9, 1, 1), True), ("liquid red x1.1", (1.1, 1, 1), True),
@@ -77,10 +78,8 @@ def load_pictures(df, run_dirs):
     return crops, masks, panels
 
 
-def recipe_vector(df, use_recipe=True):
-    """Recipe inputs, scaled; an empty (N, 0) array with --no-recipe (image only)."""
-    if not use_recipe:
-        return np.zeros((len(df), 0), np.float32)
+def recipe_vector(df):
+    """Recipe inputs, scaled to roughly 0-1."""
     return (df[RECIPE_COLS].astype(float).values / np.array(RECIPE_SCALE, float)).astype(np.float32)
 
 
@@ -117,7 +116,7 @@ def augment(crops, masks, panels, rng, shade):
 
 
 # ----------------------------------------------------------------------------------------------
-# Scores (numpy only; same definitions as train_color_model.scores)
+# Scores (numpy only)
 # ----------------------------------------------------------------------------------------------
 def roc_auc(y, s):
     y, s = np.asarray(y), np.asarray(s, float)
@@ -200,15 +199,13 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--table", required=True, help="table from build_table.py")
     ap.add_argument("--run", action="append", default=[], help="NAME=DIR for a run's images (repeatable)")
-    ap.add_argument("--out-dir", default=str(VERSION_DIR / "model" / "results" / "model2"))
+    ap.add_argument("--out-dir", default=str(VERSION_DIR / "model" / "results" / "twin_test"))
     ap.add_argument("--epochs", type=int, default=25)
     ap.add_argument("--batch", type=int, default=64)
     ap.add_argument("--lr", type=float, default=3e-4)
     ap.add_argument("--shade-aug", type=float, default=0.15, help="liquid shade augmentation, x U(1-a, 1+a)")
     ap.add_argument("--pretrained", action="store_true", help="start from ImageNet weights (downloads them)")
     ap.add_argument("--limit-vials", type=int, default=0, help="use only this many vials (smoke test)")
-    ap.add_argument("--no-recipe", action="store_true",
-                    help="image only: no recipe inputs (for real video without recipe labels)")
     ap.add_argument("--device", default=None, help="cuda / mps / cpu (default: best available)")
     args = ap.parse_args()
 
@@ -241,7 +238,7 @@ def main():
     crops, masks, panels = load_pictures(df, run_dirs)
     print(f"loaded pictures in {time.time() - t0:.0f} s; vial masks found for {masks.any(axis=(1, 2)).mean():.0%}",
           flush=True)
-    recipes = recipe_vector(df, not args.no_recipe)
+    recipes = recipe_vector(df)
     y = df[TARGETS].values.astype(np.float32)
     center = [CENTER] * len(df)
     idx = {p: np.where(part == p)[0] for p in ["fit", "val", "test"]}
@@ -292,7 +289,7 @@ def main():
     results = {
         "info": {"table": args.table, "runs": {k: str(v) for k, v in run_dirs.items()}, "device": device,
                  "pretrained": pretrained, "epochs": args.epochs, "best_epoch": best[2],
-                 "shade_aug": args.shade_aug, "recipe_inputs": not args.no_recipe, "fit_pictures": len(idx["fit"]), "val_pictures": len(idx["val"]),
+                 "shade_aug": args.shade_aug, "fit_pictures": len(idx["fit"]), "val_pictures": len(idx["val"]),
                  "test_pictures": len(idx["test"]), "test_vials": int(test.vial_uid.nunique()),
                  "minutes": round((time.time() - t0) / 60, 1),
                  "note": "scored on TWIN test vials only; twin colors are uncalibrated (approx_v1)"},
@@ -314,12 +311,12 @@ def main():
                pd.DataFrame({"est_orange": est[:, 0].round(4), "est_blue": est[:, 1].round(4),
                              "gap": test_gap.round(4), "flag": flag})], axis=1).to_csv(
         out / "test_predictions.csv", index=False)
-    torch.save({"state_dict": best[1], "threshold": float(t), "recipe_cols": [] if args.no_recipe else RECIPE_COLS,
+    torch.save({"state_dict": best[1], "threshold": float(t), "recipe_cols": RECIPE_COLS,
                 "recipe_scale": RECIPE_SCALE, "load": LOAD, "center": CENTER, "crop": (CROP_W, CROP_H),
                 "panel_roi": PANEL_ROI}, out / "model.pt")
 
     s = results["mix_rule_cnn"]["test"]
-    print(f"\nmodel 2 (CNN mix + rule): AUC {s['roc_auc']}, F1 {s['f1']}, recall {s['recall']}, "
+    print(f"\ntwin test: AUC {s['roc_auc']}, F1 {s['f1']}, recall {s['recall']}, "
           f"false alarms {s['false_alarm_rate']}, threshold {t:.2f}")
     print(f"mix error (MAE): {results['mix_rule_cnn']['mix_error_mae']}")
     print(f"vials: {results['mix_rule_cnn']['test_vials']}")

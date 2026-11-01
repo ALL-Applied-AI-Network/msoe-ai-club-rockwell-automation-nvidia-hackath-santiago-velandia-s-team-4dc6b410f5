@@ -1,32 +1,33 @@
-"""Break twin pictures down into a table: one row per picture, ready for the color model.
+"""Turn the digital-twin pictures into one table: one row per picture, with the recipe information, the
+measured colors and the right answers.
 
-    # from version_1/ (needs opencv-python + numpy, e.g. changeover-watch/.venv/bin/python):
-    python model/build_table.py twin_runs/train_camera_s1001/out
-    # -> model/tables/train_camera_s1001.csv
+    # from version_1/ (needs numpy + opencv-python):
+    .venv/bin/python model/build_table.py <twin run folder> [<more run folders> ...] --out model/tables/train_all.csv
 
-Several runs can be given at once; vial_uid = "<run seed>-<sample_id>" keeps vials from different runs apart.
+Each run folder is one batch from the twin generator (render_dataset.py), with labels.csv, run_info.json and
+images/. A vial's id is "<run seed>-<sample number>", so vials from different runs never mix.
 
-What is measured from each picture (the same code can run on real camera frames; the camera never moves):
-  liq_*    median color of a fixed patch at the bottom of the vial (inside the liquid even at 10 mL)
-  panel_*  median color of the white panel left of the vial (shows the lighting)
-  liqn_*   liquid color divided by the panel color (lighting-corrected)
-  liq_h/s/v  hue, saturation, brightness of the liquid color (OpenCV scale: hue 0-179)
-  band{k}_r/g/b  median color of 8 stacked strips down the visible vial below the carrier (band0 = top,
-           y 280-300; band7 = bottom, y 420-440), divided by the panel color. Shows the color through
-           the whole liquid column and where the liquid ends (the real camera sees the same).
-
-Column roles (see docs/DATASET_GENERATION.md, the leakage rule):
-  X  = X_COLS: recipe info the line knows at runtime + the measured colors.
-       expected_orange/blue = the dye shares the recipe says the vial should have after this pour
-       (plain recipe math, no leftover).
-       expected_clean_orange/blue = what a normal clean vial of this recipe looks like after this pour, with
-       the station's typical leftover (NOMINAL_RESIDUE_ML of the same recipe's mix). Clean vials blend at
-       pour 1, so this is the fair reference. On the real line the typical leftover is a station constant
-       learned in the calibration period; here it is the middle of the twin's 5-30 mL range.
-  y  = Y_COLS: actual_orange/blue (the true mix, which the model learns to predict), off_spec (main flag),
-       carryover. off_spec = 1 when the actual orange or blue share differs by more than OFF_SPEC_POINTS
-       from a normal clean vial of the same recipe at the same pour (same leftover, same-recipe mix).
-  split = train/test, 80/20 by vial (all pours of a vial on the same side). Fixed seed, so it never changes.
+What each row holds:
+  - Recipe information the line knows while running (the model may use these):
+      t200_ml, t400_ml, t100_ml, total_ml   mL of orange (T200), blue (T400) and clear (T100) in the recipe
+      stage, stages_total                    which pour this picture was taken after, and how many pours in all
+      expected_orange/blue                   dye shares the recipe gives after this pour (plain recipe math)
+      expected_clean_orange/blue             dye shares a correct vial has after this pour: correct vials also
+                                             start with some leftover of the same recipe from the shared mixing
+                                             path; a typical 17.5 mL (NOMINAL_RESIDUE_ML) is assumed, the middle
+                                             of the twin's 5-30 mL range. The alert compares against these.
+  - Colors measured from the picture (the same code works on real camera frames; the camera never moves):
+      liq_*, panel_*, liqn_*, liq_h/s/v      a patch at the bottom of the liquid, the white panel left of the vial,
+                                             their ratio (cancels the lighting), and hue/saturation/brightness
+      band{k}_r/g/b                          8 strips down the vial (y 280-440, 20 pixels each), divided by the
+                                             panel color
+  - The right answers (used only for training and scoring, never as inputs):
+      actual_orange, actual_blue             the true dye shares in the vial (exact, from the twin)
+      off_spec                               1 when the true orange or blue share is more than 5 points
+                                             (OFF_SPEC_POINTS) away from a correct vial of the same recipe at the
+                                             same pour; off_spec_points is that difference
+      carryover                              1 when the vial followed a different recipe
+  - split: train or test. 80/20 by vial (all pictures of a vial on the same side), fixed seed, never changes.
 """
 import argparse
 import csv
