@@ -77,6 +77,8 @@ Uploaded videos play at real speed; add `--speed 10` to play them 10 times faste
 
 ## Using the alerts on the line
 
+**Why catching it at the station matters:** When defects escape the line, the cost grows sharply: a single bottling-defect recall cost Constellation Brands $3.5M in net sales plus a $5.4M charge to cost of product sold in 2014 ([SEC filing](https://www.sec.gov/Archives/edgar/data/16918/000001691814000029/R18.htm)), and even small breweries' recall claims average $25,000–$50,000 ([The Brewer Magazine, 2018](https://thebrewermagazine.com/product-recall-overlooked-protection/)). Catching an off-color vial at the filling station costs one vial.
+
 The program **only advises; it never controls the machine.** This is required for testing on CSI's line, where the plant controls must not be touched. People act on the alerts.
 
 **For the operator at the station:**
