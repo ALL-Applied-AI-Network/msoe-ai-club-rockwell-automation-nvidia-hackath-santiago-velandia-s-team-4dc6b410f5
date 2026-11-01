@@ -1,0 +1,11 @@
+vial,recipe_id,orange_ml,blue_ml,clear_ml,detected_start_s,detected_end_s,snapshot_s,pours_seen,snapshot,expected_orange,expected_blue,est_orange,est_blue,gap,flag
+1,5,10.0,10.0,10.0,3.5,21.9,20.9,3,snapshots/vial01_final.jpg,0.333,0.333,0.334,0.333,0.0,0
+2,7,0.0,50.0,20.0,24.3,43.3,42.3,1,snapshots/vial02_final.jpg,0.0,0.714,0.085,0.663,0.085,1
+3,7,0.0,50.0,20.0,45.7,68.3,67.3,2,snapshots/vial03_final.jpg,0.0,0.714,0.0,0.707,0.008,0
+4,12,50.0,10.0,10.0,71.1,96.1,95.1,2,snapshots/vial04_final.jpg,0.714,0.143,0.532,0.257,0.183,1
+5,13,50.0,20.0,0.0,98.9,120.1,119.1,2,snapshots/vial05_final.jpg,0.714,0.286,0.692,0.267,0.023,0
+6,13,50.0,20.0,0.0,122.3,143.7,142.7,2,snapshots/vial06_final.jpg,0.714,0.286,0.713,0.273,0.013,0
+7,6,10.0,0.0,30.0,146.1,160.9,159.9,2,snapshots/vial07_final.jpg,0.25,0.0,0.468,0.112,0.218,1
+8,11,10.0,50.0,10.0,170.9,196.3,195.3,2,snapshots/vial08_final.jpg,0.143,0.714,0.162,0.593,0.121,1
+9,11,10.0,50.0,10.0,199.1,222.3,221.3,2,snapshots/vial09_final.jpg,0.143,0.714,0.143,0.71,0.004,0
+10,9,35.0,35.0,10.0,224.9,253.9,252.9,2,snapshots/vial10_final.jpg,0.438,0.438,0.404,0.493,0.056,0

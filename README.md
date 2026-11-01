@@ -108,6 +108,18 @@ Instead of a camera, the dashboard can ask the digital twin to **make a fill-cam
 4. The twin renders the whole video. This takes about 2 minutes per vial on the YAAD GPU, and the dashboard shows the progress. Then the video plays at normal speed with OK/ALERT for each vial.
 5. The twin also saves `truth.csv` (the true mix and carryover of every vial) in its run folder on YAAD. It is **not** sent to the dashboard, so the check runs blind, and it can be compared with the dashboard's `vials.csv` afterwards.
 
+**Demo check (one twin run, 10 vials, `queue_2_frequent_changes.csv`):** the twin rendered the video in 25 minutes (688 pictures), and the dashboard then checked it blind. Compared with the twin's `truth.csv`:
+
+| Measure | Result |
+|---|---|
+| Mix estimate error, orange / blue | 0.9 / 1.6 percentage points on average |
+| Carryover vials caught | 4 of 6 |
+| Clean vials wrongly flagged | 0 of 3 (the first vial is not counted) |
+
+- **The two missed vials were measured correctly but were barely off:** recipe 13 after 12 was truly 3.2 points from a correct vial (measured 2.3), and recipe 9 after 11 was 5.5 points off (measured 5.6). Both are under the 8-point alert limit.
+- **This is a single run on twin pictures,** the kind of pictures the model was trained on. The real-world result is video 5 above.
+- Files: [`model/results/twin_video_check/`](model/results/twin_video_check/) holds the dashboard's `vials.csv`, the twin's `twin_truth.csv` and the `recipe_queue.csv`.
+
 ---
 
 ## Results
