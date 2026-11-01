@@ -282,6 +282,7 @@ The trained model file (`model/results/twin_test/model.pt`, 43 MB) is not in git
 | `twin_tools/recipe_rules.json` | Recipe rules, tank assignment and CSI's 10 real recipes |
 | `docs/DATASET_GENERATION.md` | How the twin pictures are made, and every column of their labels |
 | `samples/` | 24 example twin pictures; `samples.csv` lists recipe, pour and carryover for each |
+| `submission_materials/` | The 1-page summary (with references) and the 5-minute video script |
 
 ## Data
 
