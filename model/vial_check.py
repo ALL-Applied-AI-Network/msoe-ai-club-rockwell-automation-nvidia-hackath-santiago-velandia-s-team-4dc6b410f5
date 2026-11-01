@@ -8,8 +8,8 @@ the recipe should look like. If the difference is bigger than the alert threshol
 Two ways to run it, from version_1/ (needs .venv: numpy, pandas, opencv-python, torch, torchvision):
 
     # 1. Operator dashboard (opens at http://127.0.0.1:8000). Its setup screen asks for the video (upload a
-    #    file, or connect a camera by number or stream address), the recipe queue CSV and which tank holds
-    #    which color; then it plays the video and shows OK / ALERT as each vial finishes.
+    #    file, connect a camera by number or stream address, or connect the digital twin), the recipe queue CSV
+    #    and which tank holds which color; then it shows OK / ALERT as each vial finishes.
     .venv/bin/python model/vial_check.py --live          # --speed 10 plays uploaded videos 10x faster
     # -> model/results/live_<name>_<date-time>/vials.csv (saved after every vial), snapshots/, recipe_queue.csv
 
@@ -38,10 +38,13 @@ vial in the queue is not scored (nothing came before it).
 import argparse
 import io
 import json
+import os
 import sys
 import threading
 import time
+import urllib.error
 import urllib.parse
+import urllib.request
 from collections import deque
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -144,7 +147,8 @@ def match_queue(queue, detected):
     if {"start_s", "end_s"} <= set(queue.columns):
         match = {}
         for i, q in enumerate(queue.itertuples()):
-            best, j = max((min(d["end_s"], q.end_s) - max(d["start_s"], q.start_s), j) for j, d in enumerate(detected))
+            best, j = max(((min(d["end_s"], q.end_s) - max(d["start_s"], q.start_s), j)
+                           for j, d in enumerate(detected)), default=(0, None))
             if best > 0:
                 match[i] = detected[j]
         return match
@@ -277,11 +281,17 @@ class Dashboard:
         self.stop.clear()
         with self.lock:
             self.state.update(mode="running", error=None, t=0.0, current=None, results=[], events=[],
-                              source=str(source), out=str(out), csv=str(out / "vials.csv"))
+                              source=str(source), out=str(out), csv=str(out / "vials.csv"), phase=None,
+                              render=None, twin=False)
 
         def work():
             try:
-                run_live(source, queue, out, self.speed, self)
+                video = source
+                if isinstance(source, Twin):                      # render first, then play at normal speed
+                    video = source.wait_for_video(out, self)
+                    self.update(twin=True)
+                if video is not None:
+                    run_live(video, queue, out, 1.0 if isinstance(source, Twin) else self.speed, self)
             except Exception as e:                                # shown on the dashboard
                 self.update(error=str(e))
             self.update(mode="finished", current=None)
@@ -346,7 +356,12 @@ class Dashboard:
                 try:
                     form = json.loads(body)
                     queue = read_queue(io.StringIO(form["recipes_csv"]), form["tanks"])
-                    if form.get("camera"):
+                    if form.get("twin"):
+                        source, name = Twin(form["twin"]), "twin"
+                        # the twin makes its own timing, so a queue's video times (start_s/end_s) don't apply
+                        queue = queue.drop(columns=["start_s", "end_s"], errors="ignore")
+                        source.send_queue(queue)
+                    elif form.get("camera"):
                         cam = str(form["camera"]).strip()
                         source, name = (int(cam), f"camera{cam}") if cam.isdigit() else (cam, "camera")
                     else:
@@ -365,19 +380,69 @@ class Dashboard:
         print(f"dashboard: http://{host}:{port}", flush=True)
 
 
+class Twin:
+    """The digital twin (twin_tools/render_live_video.py), reached over HTTP. The dashboard sends it the recipe
+    queue; the twin renders the whole fill-camera video; then the dashboard downloads it and plays it."""
+
+    def __init__(self, address):
+        self.url = address.strip().rstrip("/")
+
+    def call(self, path, data=None, timeout=10):
+        req = urllib.request.Request(self.url + path, data=data, method="POST" if data is not None else "GET")
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                return r.read()
+        except urllib.error.HTTPError as e:
+            body = e.read().decode(errors="replace")
+            try:
+                body = json.loads(body).get("error") or body
+            except ValueError:
+                pass
+            raise RuntimeError(f"the twin answered {e.code}: {body}")
+        except OSError as e:
+            raise RuntimeError(f"cannot reach the twin at {self.url} ({e}); is the SSH tunnel open?")
+
+    def send_queue(self, queue):
+        vials = [{"vial": int(q.vial), "recipe_id": str(q.recipe_id), "orange_ml": float(q.t200_ml),
+                  "blue_ml": float(q.t400_ml), "clear_ml": float(q.t100_ml)} for q in queue.itertuples()]
+        self.call("/queue", json.dumps({"vials": vials}).encode())
+
+    def wait_for_video(self, out, dash):
+        """Show the render progress until the video is ready, then download it. Returns its path or None."""
+        while not dash.stop.is_set():
+            status = json.loads(self.call("/status"))
+            dash.update(phase="rendering", render=status)
+            try:
+                jpeg = self.call("/latest.jpg")
+                with dash.lock:
+                    dash.jpeg = jpeg
+            except RuntimeError:
+                pass                                              # no frame yet
+            if status["state"] == "done":
+                dash.update(phase="downloading")
+                path = out / "twin_video.mp4"
+                path.write_bytes(self.call("/video", timeout=300))
+                return path
+            if status["state"] in ("error", "cancelled", "idle"):
+                raise RuntimeError(f"the twin stopped: {status.get('error') or status['state']}")
+            time.sleep(2)
+        self.call("/cancel", b"{}")                               # Stop pressed while rendering
+        return None
+
+
 def run_live(source, queue, out, speed, dash):
     net, threshold = load_model()
     scored = {"start_s", "end_s"} <= set(queue.columns)
     queue = queue.assign(recipe_id=queue.recipe_id.astype(str)).reset_index(drop=True)
     prev_recipe = queue.recipe_id.shift()
     is_file = not isinstance(source, int) and Path(str(source)).is_file()
-    cap = cv2.VideoCapture(source)
+    cap = cv2.VideoCapture(str(source) if is_file else source)
     if not cap.isOpened():
         raise RuntimeError(f"cannot open the video source {source}")
     fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
     step = max(1, round(fps / FPS_SAMPLE))
     dash.update(speed=speed if is_file else 1, threshold=round(float(threshold), 3), scored=scored,
-                vials_in_queue=len(queue), camera=not is_file)
+                vials_in_queue=len(queue), kind="file" if is_file else "camera", phase="playing")
 
     sig, recent, used, rows = [], deque(), set(), []
     prev, last_spike, c0, i, last_sample, last_jpeg = None, None, 0.5, 0, -1.0, 0.0
@@ -443,7 +508,7 @@ def run_live(source, queue, out, speed, dash):
         recent.append((t, f))
         while recent[0][0] < t - 3:
             recent.popleft()
-        if (i % step == 0) if is_file else (t - last_sample >= 1 / FPS_SAMPLE):
+        if (i % step == 0) if is_file else (t - last_sample >= 1 / FPS_SAMPLE - 1e-6):
             last_sample = t
             x0, y0, x1, y1 = VIAL_REGION
             cx0, cy0, cx1, cy1 = CARRIER_REGION
@@ -527,10 +592,15 @@ th{color:var(--dim);font-weight:500}td.bad{color:var(--bad);font-weight:700}td.o
 <div id="setup" hidden>
  <section class="card"><h2>1 &middot; Video</h2>
   <div class="choice"><label><input type="radio" name="src" value="file" checked> Upload a video</label>
-   <label><input type="radio" name="src" value="camera"> Connect a camera</label></div>
+   <label><input type="radio" name="src" value="camera"> Connect a camera</label>
+   <label><input type="radio" name="src" value="twin"> Digital twin</label></div>
   <div id="src-file"><input type="file" id="video" accept="video/*"><p class="hint">The fill-camera view, 640&times;480.</p></div>
   <div id="src-camera" hidden><input type="text" id="camera" placeholder="0  (USB camera number)  or  rtsp://camera-address/stream">
    <p class="hint">Camera number for a USB camera, or the camera's stream address.</p></div>
+  <div id="src-twin" hidden><input type="text" id="twin" value="http://localhost:20700">
+   <p class="hint">The twin (twin_tools/render_live_video.py) running in Isaac Sim. Start check sends it the recipe queue;
+    the twin plays out the vials and renders the fill-camera video (about 2 minutes per vial), then the video plays here at
+    normal speed.</p></div>
  </section>
  <section class="card"><h2>2 &middot; Recipe queue</h2>
   <input type="file" id="recipes" accept=".csv,text/csv">
@@ -557,21 +627,25 @@ th{color:var(--dim);font-weight:500}td.bad{color:var(--bad);font-weight:700}td.o
  <section class="card wide"><h2>Vial log</h2><div class="scroll"><table id="log"></table></div></section>
 </main>
 <script>
+const esc=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const $=id=>document.getElementById(id),pct=v=>Math.round(100*v)+"%";
 const ml=r=>[r.orange_ml&&r.orange_ml+" mL orange",r.blue_ml&&r.blue_ml+" mL blue",r.clear_ml&&r.clear_ml+" mL clear"].filter(Boolean).join(" + ");
 let filled=false,mode=null;
-document.querySelectorAll("input[name=src]").forEach(r=>r.onchange=()=>{const cam=r.value=="camera"&&r.checked||document.querySelector("input[name=src]:checked").value=="camera";
- $("src-file").hidden=cam;$("src-camera").hidden=!cam});
+const srcKind=()=>document.querySelector("input[name=src]:checked").value;
+document.querySelectorAll("input[name=src]").forEach(r=>r.onchange=()=>{const k=srcKind();
+ $("src-file").hidden=k!="file";$("src-camera").hidden=k!="camera";$("src-twin").hidden=k!="twin"});
 const readText=f=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsText(f)});
 $("start").onclick=async()=>{
- $("err").textContent="";const cam=document.querySelector("input[name=src]:checked").value=="camera";
+ $("err").textContent="";const kind=srcKind(),cam=kind=="camera",tw=kind=="twin";
  const rec=$("recipes").files[0],vid=$("video").files[0];
  if(!rec)return $("err").textContent="Choose the recipe queue CSV.";
  if(cam&&!$("camera").value.trim())return $("err").textContent="Enter the camera number or stream address.";
- if(!cam&&!vid)return $("err").textContent="Choose a video file.";
- $("start").disabled=true;$("start").textContent=cam?"Connecting...":"Uploading...";
+ if(tw&&!$("twin").value.trim())return $("err").textContent="Enter the twin's address.";
+ if(kind=="file"&&!vid)return $("err").textContent="Choose a video file.";
+ $("start").disabled=true;$("start").textContent=kind=="file"?"Uploading...":"Connecting...";
  const body={recipes_csv:await readText(rec),tanks:{orange:$("t-orange").value,blue:$("t-blue").value,clear:$("t-clear").value}};
- if(cam)body.camera=$("camera").value.trim();
+ if(tw)body.twin=$("twin").value.trim();
+ else if(cam)body.camera=$("camera").value.trim();
  else{const u=await fetch("/upload?name="+encodeURIComponent(vid.name),{method:"POST",body:vid}).catch(()=>null);
   if(!u||!u.ok){$("start").disabled=false;$("start").textContent="Start check";return $("err").textContent="Upload failed."}
   body.video=(await u.json()).video}
@@ -590,25 +664,29 @@ async function tick(){
   if(mode=="running"){$("banner").className="";$("banner").textContent="Waiting for the first vial";$("snap").hidden=true;$("bars").innerHTML=""}}
  if(mode=="setup"){$("hdr").textContent="Setup";if(s.error)$("err").textContent=s.error;return}
  const run=mode=="running";$("stopbtn").hidden=!run;$("newbtn").hidden=run;
- $("hdr").textContent=`${run?(s.camera?"LIVE":"PLAYING"):"FINISHED"} · ${Math.floor((s.t||0)/60)}:${String(Math.floor((s.t||0)%60)).padStart(2,"0")}`+(s.speed>1?` · ${s.speed}x`:"");
- $("saved").innerHTML=(s.error?`<p style="color:var(--bad)">${s.error}</p>`:"")+(run?`Predictions are saved as each vial finishes:<br>${s.csv}`:`Predictions saved to:<br>${s.csv}`);
+ $("hdr").textContent=`${run?(s.phase=="rendering"?"TWIN RENDERING":s.phase=="downloading"?"DOWNLOADING":s.twin?"TWIN VIDEO":s.kind=="camera"?"LIVE":"PLAYING"):"FINISHED"} · ${Math.floor((s.t||0)/60)}:${String(Math.floor((s.t||0)%60)).padStart(2,"0")}`+(s.speed>1?` · ${s.speed}x`:"");
+ $("saved").innerHTML=(s.error?`<p style="color:var(--bad)">${esc(s.error)}</p>`:"")+(run?`Predictions are saved as each vial finishes:<br>${s.csv}`:`Predictions saved to:<br>${s.csv}`);
+ if(run&&(s.phase=="rendering"||s.phase=="downloading")){const r=s.render||{},p=Math.round(100*(r.progress||0)),m=r.eta_s!=null?Math.ceil(r.eta_s/60):null;
+  $("banner").className="";$("banner").textContent=s.phase=="downloading"?"Video ready: loading it":`The twin is rendering the video: ${p}%`;
+  $("now").innerHTML=`<div>Rendered<b>${p}%</b></div><div>Time left<b>${m==null?"estimating":"about "+m+" min"}</b></div><div>Vials<b>${r.vials||"?"}</b></div>
+   <div style="flex-basis:100%">The twin plays out the recipe queue and renders the fill camera. When it is done, the video plays here at normal speed and every vial is checked.</div>`;return}
  const c=s.current;
- $("now").innerHTML=c?`<div>Now filling<b>Vial ${c.vial}</b></div><div>Recipe<b>${c.recipe_id}</b></div>
+ $("now").innerHTML=c?`<div>Now filling<b>Vial ${c.vial}</b></div><div>Recipe<b>${esc(c.recipe_id)}</b></div>
   <div>Pours seen<b>${c.pours}</b></div><div>Status<b>${c.status}</b></div><div style="flex-basis:100%">${ml(c)}</div>`:`<div>${run?"Recipe queue finished":"Run finished"}</div>`;
  const R=s.results||[],last=R[R.length-1];
  if(last){$("banner").className=last.flag?"bad":"ok";
   $("banner").textContent=last.flag?`ALERT · vial ${last.vial}: possible carryover`:`OK · vial ${last.vial} matches recipe ${last.recipe_id}`;
   const im=$("snap");im.hidden=false;if(!im.src.endsWith(last.snapshot))im.src="/"+last.snapshot;
-  $("bars").innerHTML=`<div style="color:var(--dim);font-size:13px">Recipe ${last.recipe_id}: ${ml(last)}</div>`+
+  $("bars").innerHTML=`<div style="color:var(--dim);font-size:13px">Recipe ${esc(last.recipe_id)}: ${ml(last)}</div>`+
    bar("Orange",last.est_orange,last.expected_orange,"var(--orange)")+bar("Blue",last.est_blue,last.expected_blue,"var(--blue)")+
    `<div>Gap <b>${Math.round(100*last.gap)} points</b> (alert above ${Math.round(100*s.threshold)})</div>`}
  let tot=`<div>Vials checked<b>${R.length} of ${s.vials_in_queue||0}</b></div><div>Alerts<b>${R.filter(r=>r.flag).length}</b></div>`;
  if(s.scored){const sc=R.filter(r=>r.truth_carryover>=0),co=sc.filter(r=>r.truth_carryover==1),cl=sc.filter(r=>r.truth_carryover==0);
   tot+=`<div>Carryover caught*<b>${co.filter(r=>r.flag).length} of ${co.length}</b></div><div>Clean flagged*<b>${cl.filter(r=>r.flag).length} of ${cl.length}</b></div>`}
  $("totals").innerHTML=tot;
- $("events").innerHTML=(s.scored?"<p>* scored against an assumed label: the first vial after a recipe change is carryover.</p>":"")+(s.events||[]).map(e=>`<p>${e}</p>`).join("");
+ $("events").innerHTML=(s.scored?"<p>* scored against an assumed label: the first vial after a recipe change is carryover.</p>":"")+(s.events||[]).map(e=>`<p>${esc(e)}</p>`).join("");
  $("log").innerHTML=`<tr><th>Vial</th><th>Recipe</th><th>Measured (orange / blue)</th><th>Expected</th><th>Gap</th><th>Result</th>${s.scored?"<th>Assumed label</th>":""}</tr>`+
-  R.slice().reverse().map(r=>`<tr><td>${r.vial}</td><td>${r.recipe_id}</td><td>${pct(r.est_orange)} / ${pct(r.est_blue)}</td><td>${pct(r.expected_orange)} / ${pct(r.expected_blue)}</td>
+  R.slice().reverse().map(r=>`<tr><td>${r.vial}</td><td>${esc(r.recipe_id)}</td><td>${pct(r.est_orange)} / ${pct(r.est_blue)}</td><td>${pct(r.expected_orange)} / ${pct(r.expected_blue)}</td>
   <td>${Math.round(100*r.gap)}</td><td class="${r.flag?"bad":"ok"}">${r.flag?"ALERT":"OK"}</td>${s.scored?`<td>${{"1":"carryover","0":"clean","-1":"not scored"}[r.truth_carryover]}</td>`:""}</tr>`).join("")}
 setInterval(tick,500);tick();
 const live=$("live");let loading=false;live.onload=live.onerror=()=>{loading=false};
@@ -625,7 +703,9 @@ def main():
     ap.add_argument("--live", action="store_true",
                     help="open the dashboard: pick a video or camera, the recipe CSV and the tank assignment there")
     ap.add_argument("--speed", type=float, default=1.0, help="--live: replay speed for uploaded videos")
-    ap.add_argument("--host", default="127.0.0.1", help="--live: dashboard address (0.0.0.0 = other screens too)")
+    ap.add_argument("--host", default="127.0.0.1",
+                    help="--live: dashboard address (0.0.0.0 = other screens on the network too; no password, "
+                         "so only on a trusted network)")
     ap.add_argument("--port", type=int, default=8000, help="--live: dashboard port")
     args = ap.parse_args()
     if args.live:
@@ -679,7 +759,9 @@ def main():
     df["gap"] = np.maximum(np.abs(df.est_orange - df.expected_orange), np.abs(df.est_blue - df.expected_blue)).round(3)
     df["flag"] = (df.gap > threshold).astype(int)
 
-    metrics = {"info": {"video": str(video), "recipes": str(Path(args.recipes).resolve()),
+    here = MODEL_DIR.parent                                    # paths relative to version_1/
+    metrics = {"info": {"video": os.path.relpath(video, here),
+                        "recipes": os.path.relpath(Path(args.recipes).resolve(), here),
                         "model": str(CHECKPOINT.relative_to(MODEL_DIR.parent)), "threshold": round(float(threshold), 3),
                         "check": "final vial (last pour)", "calibration": "none",
                         "vials_in_queue": n_queue, "vials_detected": len(detected), "vials_matched": len(match),

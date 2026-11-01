@@ -6,7 +6,7 @@ A camera-based add-on for vial filling machines. It looks at each vial after fil
 
 The main problem it catches is **carryover**. The station's tanks share one mixing path, so when the recipe changes, liquid left over from the previous recipe ends up in the next vial.
 
-The model was trained only on pictures from a **digital twin** (a 3D simulation of the station). It was then tested once on a **real video** from the line, which it had never seen.
+The model was trained only on pictures from a **digital twin** (a 3D simulation of the station). It was then tested once on a **real video** from CSI's test line (CSI = the UWM Connected Systems Institute, which runs the line). The model never trained on real video; the only real-video input was an early estimate of the twin's dye colors (see the disclosures under Results).
 
 **Results at a glance:**
 
@@ -20,7 +20,7 @@ The model was trained only on pictures from a **digital twin** (a 3D simulation 
 
 ## How it works
 
-1. **Find each vial.** The program watches the fill camera. When the carrier ring moves, vials are changing. Movement inside the vial means a pour.
+1. **Find each vial.** The program watches the fill camera. When the carrier (the holder that moves each vial along the track) moves, vials are changing. Movement inside the vial means a pour.
 2. **Take a picture of the finished vial,** 1 second before the carrier moves it away.
 3. **Estimate the mix.** A neural network looks at the picture and the recipe and estimates the share of orange dye and blue dye in the vial. For example: *about 35% orange, 34% blue*.
 4. **Compare with the recipe.** The **gap** is the larger difference between the estimate and what a correct vial of that recipe looks like, for orange or for blue. Above **8 percentage points** the vial gets an **ALERT**; otherwise **OK**. For example: *"recipe 6 should be 25% orange and 0% blue; measured 35% / 34%; gap 34 points: ALERT."*
@@ -53,7 +53,7 @@ cd version_1
 Then open **http://127.0.0.1:8000** in a web browser. To open it from another screen on the same network (for example, a tablet at the line), add `--host 0.0.0.0`.
 
 **Setup screen:**
-1. **Video:** choose **Upload a video** (an .mp4 from the fill camera) or **Connect a camera** (a USB camera number such as `0`, or a stream address such as `rtsp://...`).
+1. **Video:** choose **Upload a video** (an .mp4 from the fill camera), **Connect a camera** (a USB camera number such as `0`, or a stream address such as `rtsp://...`), or **Digital twin** (optional, see [below](#optional-the-digital-twin-as-a-video-source)).
 2. **Recipe queue:** upload the CSV.
 3. **Tank assignment:** pick which tank holds orange, blue and clear.
 4. Click **Start check**.
@@ -71,9 +71,42 @@ Then open **http://127.0.0.1:8000** in a web browser. To open it from another sc
 - `snapshots/`: the picture of each vial.
 - `recipe_queue.csv`: the queue that was used.
 
-Recorded videos play at real speed; add `--speed 10` to play them 10 times faster.
+Uploaded videos play at real speed; add `--speed 10` to play them 10 times faster. Twin videos always play at normal speed.
 
 **Scoring (optional):** if the recipe CSV also has CSI's `start_s, end_s` columns (when each vial was filled, in video seconds), vials are matched by time and the dashboard also shows carryover vials caught and clean vials flagged. Without them, vials are matched in the order they arrive.
+
+## Using the alerts on the line
+
+The program **only advises; it never controls the machine.** This is required for testing on CSI's line, where the plant controls must not be touched. People act on the alerts.
+
+**For the operator at the station:**
+1. **A red ALERT names the vial:** its number in the queue, its recipe, and how far its color is from the recipe (for example, *"vial 4, recipe 6: measured 35% orange / 34% blue, expected 25% / 0%"*).
+2. **The operator pulls that vial** at the next stop (or marks it) and sets it aside for a second look, instead of letting it go on to capping and packing.
+3. **The picture of the vial** is saved with the alert, so a supervisor or quality inspector can review the decision later.
+
+**For the quality process:**
+- **Every run leaves a record:** `vials.csv` lists each vial with OK/ALERT, the measured and expected mix and the gap. It can be handed to whoever decides what happens to flagged vials: re-test, rework, or discard. CSI's documents don't say what the line does with off-color vials, so that decision stays with the plant's own process.
+- **Alerts point to the cause:** on CSI's line, alerts cluster on the first vial after a recipe change, which points to leftover liquid in the shared mixing path. A plant could use this to add a short flush between recipes, or to set aside the first vial after every change as a routine step.
+- **Later, with the plant's approval:** the same OK/ALERT signal could drive a stack light or a reject gate through the machine's controller. That is not part of this project.
+
+## Optional: the digital twin as a video source
+
+Instead of a camera, the dashboard can ask the digital twin to **make a fill-camera video for any recipe queue**. This is an extra feature for testing and demos, not part of the main results.
+
+1. The twin (`twin_tools/render_live_video.py`) runs in Isaac Sim 5.1 (NVIDIA's 3D simulation software). It needs an NVIDIA GPU, so here it runs in a workspace on YAAD (the GPU lab provided for the hackathon). The setup commands are at the top of the script.
+   - **Before starting a run,** open the secure connection from the laptop to YAAD (an SSH tunnel), with the VPN on, and leave it open:
+     ```bash
+     ssh -N -L 20700:127.0.0.1:20700 <user>@<workspace address>
+     ```
+   - The dashboard reaches the twin at `http://localhost:20700` (already filled in on the setup screen).
+2. On the setup screen, choose **Digital twin** and upload a recipe queue (5 examples are in `twin_tools/demo_queues/`).
+3. **The twin decides on its own what happens on the line**, as the real station would:
+   - **Carryover comes from the leftover physics:** the station keeps one leftover amount in its shared mixing path (5–30 mL, chosen per run), and the first vial after a recipe change picks up the previous recipe's mix.
+   - **Pour speeds and waits vary** from vial to vial.
+   - **The vial stops in a slightly different spot** each time.
+   - **Now and then an empty carrier passes.**
+4. The twin renders the whole video. This takes about 2 minutes per vial on the YAAD GPU, and the dashboard shows the progress. Then the video plays at normal speed with OK/ALERT for each vial.
+5. The twin also saves `truth.csv` (the true mix and carryover of every vial) in its run folder on YAAD. It is **not** sent to the dashboard, so the check runs blind, and it can be compared with the dashboard's `vials.csv` afterwards.
 
 ---
 
@@ -84,7 +117,7 @@ Recorded videos play at real speed; add `--speed 10` to play them 10 times faste
 The trained model was run once on CSI's real video 5:
 - 30 vials and 10 recipes, each recipe on 3 vials in a row.
 - No adjustment to the real camera.
-- Nothing was tuned on this video.
+- Nothing was trained or tuned on this video. The one exception is the twin's dye colors, which were estimated from it earlier (see Disclosures).
 
 **Scoring rule (an assumption):** CSI's labels don't say which vials have carryover. The first vial after a recipe change is counted as carryover and the next two as clean. The very first vial has nothing before it and is not scored. That leaves **29 scored vials: 9 carryover, 20 clean.**
 
@@ -95,6 +128,7 @@ The trained model was run once on CSI's real video 5:
 | Clean vials wrongly flagged | **9 of 20** |
 | AUC | **0.82** |
 | Typical gap: carryover vs clean vials | **28 vs 7 points** |
+| Flagged vials that really were carryover | **8 of 17 (47%)**, against 9 of 29 (31%) for vials picked at random |
 
 **By recipe** (each recipe: the vial right after the change, then 2 clean vials)
 
@@ -112,10 +146,10 @@ The trained model was run once on CSI's real video 5:
 | 14 (0 / 10 / 60) | caught | 2 of 2 |
 
 **What this shows:**
-- **It works on a real camera without any real training data.** Carryover vials stand out clearly: a typical gap of 28 points against 7 for clean vials.
+- **Carryover stands out on a real camera, without any real training pictures:** a typical gap of 28 points for carryover vials against 7 for clean vials.
 - **The false alarms are a color bias for certain recipes, not random noise.** 8 of the 9 come from recipe 7 (blue only) and from recipes 6, 10 and 14, which are mostly clear water. On these the model reads more dye than the vial holds, on every vial of the recipe.
   - The mixed recipes 5, 8, 11 and 12 have no false alarms.
-  - A short adjustment using a few known-good vials per recipe could likely remove this bias. It is not part of this version.
+  - A short adjustment using a few known-good vials per recipe might reduce this bias. This was not tested and is not part of this version.
 - **The one miss** is recipe 9 right after recipe 8. Both have equal orange and blue, so the leftover barely changes the color.
 
 Every vial's estimate, gap and result: [`model/results/video5_validation/vials.csv`](model/results/video5_validation/vials.csv). All 30 vial pictures with their results: [`contact_sheet.jpg`](model/results/video5_validation/contact_sheet.jpg).
@@ -148,8 +182,7 @@ The twin test runs on the **picture after every pour**, not just the finished vi
 | 3 | 69% | 2% |
 
 - **Most false alarms come after pour 1.** At that point the unknown amount of leftover blurs what "correct" looks like.
-- **Ignoring pour-1 alerts** gives 225 of 323 carryover vials caught (70%) with only 30 of 386 clean vials flagged (8%).
-- **The recipe alone can't predict the answer:** a version with no picture scored AUC 0.54 (guessing). So the model really reads the color.
+- **Ignoring pour-1 alerts** (counting only vials with 2 or more pours) gives 225 of 323 carryover vials caught (70%) with only 30 of 386 clean vials flagged (8%).
 
 Full numbers: [`model/results/twin_test/metrics.json`](model/results/twin_test/metrics.json); every test prediction: [`test_predictions.csv`](model/results/twin_test/test_predictions.csv).
 
@@ -181,8 +214,8 @@ recipe (10 numbers) ────────────────────
 **Training:**
 - **Data:** 8,904 twin pictures of 4,000 vials, split by vial: 80% to learn from and 20% for the final test. 15% of the learning vials are held back to pick the best round and the 8-point threshold.
 - **Variety added during training:** each picture's liquid shade is changed at random (each color × 0.85–1.15) and the vial is shifted up to 6 pixels, so the model can't depend on the twin's exact colors or position.
-- **Settings:** 25 rounds through the data, average-error loss, AdamW optimizer, learning rate 3e-4.
-- **Hardware and time:** one NVIDIA DGX Spark GPU (YAAD), about 7 minutes.
+- **Settings:** 25 rounds through the data; the network is adjusted to reduce the average error of its estimates (AdamW optimizer, learning rate 3e-4).
+- **Hardware and time:** one NVIDIA DGX Spark GPU computer on YAAD, about 7 minutes.
 
 ---
 
@@ -201,7 +234,8 @@ recipe (10 numbers) ────────────────────
 Python 3 with `numpy`, `pandas`, `opencv-python`, `torch` and `torchvision`. The project's environment is `version_1/.venv`.
 
 ```bash
-# 1. Make twin pictures (Isaac Sim 5.1, e.g. on YAAD; details in docs/DATASET_GENERATION.md)
+# 1. Make twin pictures (Isaac Sim 5.1, e.g. on YAAD; details in docs/DATASET_GENERATION.md).
+#    Copy twin_tools/render_dataset.py and recipe_rules.json into the twin folder's tools/ first, then from the twin folder:
 /isaac-sim/python.sh tools/render_dataset.py --twin /job/in --count 1000 --variations 1 --seed 2001 \
     --styles camera --dye-jitter 0.2 --pos-jitter 4 --out-dir /job/out
 
@@ -231,6 +265,8 @@ The trained model file (`model/results/twin_test/model.pt`, 43 MB) is not in git
 | `model/results/twin_test/` | Twin test results: metrics, every test prediction, the training log |
 | `model/results/video5_validation/` | Real video 5 results: every vial's result, pictures, summary |
 | `twin_tools/render_dataset.py` | Makes training pictures with the digital twin (Isaac Sim) |
+| `twin_tools/render_live_video.py` | Optional: the digital twin as a video source for the dashboard (makes a fill-camera video for a recipe queue) |
+| `twin_tools/demo_queues/` | 5 example recipe queues (CSI's recipes 5–14) for the twin |
 | `twin_tools/recipe_rules.json` | Recipe rules, tank assignment and CSI's 10 real recipes |
 | `docs/DATASET_GENERATION.md` | How the twin pictures are made, and every column of their labels |
 | `samples/` | 24 example twin pictures; `samples.csv` lists recipe, pour and carryover for each |

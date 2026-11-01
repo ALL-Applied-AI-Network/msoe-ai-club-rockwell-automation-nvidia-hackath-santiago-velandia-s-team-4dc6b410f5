@@ -10,6 +10,8 @@ The generator renders **one picture after each pour** of a recipe. It writes a C
 |---|---|
 | `render_dataset.py` | The picture generator (runs in Isaac Sim 5.1) |
 | `recipe_rules.json` | The recipe rules, the tank assignment and CSI's 10 real recipes, each rule with its source in CSI's documents. **Rules are changed here, not in the script.** |
+| `render_live_video.py` | Optional: makes a fill-camera **video** for a recipe queue, for the dashboard (see the README) |
+| `demo_queues/` | 5 example recipe queues for `render_live_video.py` |
 
 The organizers' twin is **not copied** into this repo; the script points to it with `--twin`. Its scene files are never changed: every edit (liquid color and height, lights) is made in memory while rendering and thrown away afterwards.
 

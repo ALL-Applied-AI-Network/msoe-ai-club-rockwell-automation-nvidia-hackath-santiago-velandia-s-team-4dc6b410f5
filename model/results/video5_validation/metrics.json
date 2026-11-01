@@ -1,7 +1,7 @@
 {
   "info": {
-    "video": "/Users/adalimepowell/Desktop/Hackathon/csi-vial-fill-dataset/vial_fill/videos/vial_fill_video_5.mp4",
-    "recipes": "/Users/adalimepowell/Desktop/Hackathon/csi-vial-fill-dataset/vial_fill/labels/video5_vial_recipes.csv",
+    "video": "../csi-vial-fill-dataset/vial_fill/videos/vial_fill_video_5.mp4",
+    "recipes": "../csi-vial-fill-dataset/vial_fill/labels/video5_vial_recipes.csv",
     "model": "model/results/twin_test/model.pt",
     "threshold": 0.08,
     "check": "final vial (last pour)",

@@ -6,9 +6,9 @@ twin_tools/render_example.py
 *.pt
 __pycache__/
 .DS_Store
-model/results/cnn_smoke_test*/
 .venv/
-model/results/cosmos_smoke_test/
 # Dashboard runs, uploaded videos and other one-off checks
 model/results/live_*/
 model/results/check_*/
+# Videos and truth files from the optional twin video source
+twin_live_runs/
