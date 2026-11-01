@@ -64,6 +64,6 @@ A camera-based add-on that checks every vial against its own recipe:
 6. I. Loshchilov, F. Hutter, "Decoupled Weight Decay Regularization" (AdamW), ICLR 2019.
 7. PyTorch and torchvision (pytorch.org); OpenCV (opencv.org); pandas; NumPy.
 8. YAAD DGX Spark GPU lab (compute).
-9. Claude Code (Anthropic) was used as an AI coding assistant; see the README's "AI assistance" section.
+9. Claude Code (Anthropic) was used as an AI coding assistant; see the README's "AI reliance" section.
 10. Constellation Brands, Inc., Form 10-Q, product recall note (six months ended Aug 31, 2014), SEC EDGAR: sec.gov/Archives/edgar/data/16918/000001691814000029/R18.htm
 11. J. Lassen, The Hanover Insurance Group, quoted in "Product Recall: The Most Overlooked Protection," The Brewer Magazine, Apr 24, 2018: thebrewermagazine.com/product-recall-overlooked-protection/

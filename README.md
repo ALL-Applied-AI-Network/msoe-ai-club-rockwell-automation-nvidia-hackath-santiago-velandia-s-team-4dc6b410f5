@@ -298,11 +298,24 @@ The trained model file (`model/results/twin_test/model.pt`, 43 MB) is not in git
 - **Compute:** YAAD DGX Spark cluster.
 - **Tools:** NVIDIA Isaac Sim 5.1 and Omniverse Replicator; NVIDIA PyTorch container; ResNet-18 (torchvision, ImageNet weights); PyTorch, OpenCV, pandas, NumPy.
 
-### AI assistance
+## AI reliance
 
-**Claude Code** (Anthropic) was used as an AI coding assistant:
-- **Code:** it wrote and tested the code in this repo (twin picture generator, table builder, model training, vial check and dashboard), following the project's decisions.
-- **Checks:** it reviewed rendered pictures and data quality, enforced the project rules (no answer leakage into model inputs, split by vial, video 5 kept for final validation), and re-checked results.
-- **Docs:** it helped write the documentation and the YAAD job settings.
+This project relied heavily on **Claude Code** (Anthropic), an AI coding assistant. This section states plainly what it did, what it did not do, and how its work was checked.
 
-Project decisions (what to build, the data plan, which model to use, which runs to launch) were made, and all GPU jobs were run, by the project author.
+**What the AI did:**
+- **Code:** wrote and tested all code in this repo: the twin picture generator, the table builder, model training, the vial check, the operator dashboard and the twin video tool.
+- **Writing:** drafted this README, `docs/DATASET_GENERATION.md`, the 1-page summary and the video script in `submission_materials/`, and the YAAD job settings.
+- **Checks:** reviewed rendered pictures and data quality, and re-ran results to confirm the numbers in the docs.
+- **Second reviews:** other Claude models were asked to look for breaks of the organizers' rules and for logic errors. Their findings were checked before anything was changed, and one finding that turned out to be wrong was rejected.
+- **Research:** found the cost figures under "Using the alerts on the line"; only figures confirmed on the original source pages were used.
+
+**What the AI did not do:**
+- **Decisions:** what to build, the data plan, which model to use, and which runs to launch were decided by the project author, who approved each change.
+- **GPU jobs and accounts:** all GPU jobs were run by the project author. Logins and API keys (YAAD, NVIDIA NGC) were entered only by the project author and never passed through the AI.
+
+**How the AI's work was checked:**
+- **Fixed project rules:** no answer leakage into model inputs (render settings are never inputs), the twin data is split by vial, and real video 5 is used only for the final validation, never for training or tuning.
+- **Repeatable results:** the recorded check and the dashboard give the same video 5 results (8 of 9 caught, 9 of 20 clean vials flagged, AUC 0.82), and every model result in this README comes from a saved results file in `model/results/`.
+- **Twin video run:** checked against the twin's hidden truth file.
+
+**Remaining risk:** AI-written code can contain mistakes that these checks did not catch. All code and results files are in this repo so anyone can re-run and verify them.
